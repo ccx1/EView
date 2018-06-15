@@ -23,7 +23,6 @@ public class EAdapterDataObserver extends RecyclerView.AdapterDataObserver {
         if (mWrapAdapter != null) {
             mWrapAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override

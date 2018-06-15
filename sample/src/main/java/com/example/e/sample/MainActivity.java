@@ -1,5 +1,8 @@
 package com.example.e.sample;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements ERecycleView.Load
     private List<String> list = new ArrayList<>();
     private MainAdapter mMainAdapter;
     private ERecycleView mRecycleView;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ERecycleView.Load
         TextView textView1 = new TextView(this);
         textView1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView1.setTextSize(18);
-        textView1.setText("我是脚部局");
+        textView1.setText("正在加载");
         mRecycleView.setFootView(textView1);
 
     }
@@ -59,9 +63,22 @@ public class MainActivity extends AppCompatActivity implements ERecycleView.Load
     @Override
     public void onLoadMore() {
         System.out.println("加载更多");
-        for (int i = 0; i < 100; i++) {
-            list.add("我是加载更多的aaaaa" + i);
-        }
-        mMainAdapter.notifyDataSetChanged();
+        new Thread(){
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    list.add("我是加载更多的aaaaa" + i);
+                }
+                SystemClock.sleep(3000);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println(Thread.currentThread().getName());
+                        mMainAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }.start();
+
     }
 }
