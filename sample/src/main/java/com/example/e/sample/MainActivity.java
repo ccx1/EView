@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -34,14 +35,15 @@ public class MainActivity extends AppCompatActivity implements ERecycleView.Load
         mMainAdapter = new MainAdapter(list);
         mRecycleView.setAdapter(mMainAdapter);
         mRecycleView.setLoadingListener(this);
+
         TextView textView = new TextView(this);
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         textView.setTextSize(18);
         textView.setText("我是头部局");
         mRecycleView.setHeaderView(textView);
 
         TextView textView1 = new TextView(this);
-        textView1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView1.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         textView1.setTextSize(18);
         textView1.setText("正在加载");
         mRecycleView.setFootView(textView1);

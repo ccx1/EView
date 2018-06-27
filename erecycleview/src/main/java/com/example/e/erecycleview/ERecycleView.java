@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import static com.example.e.erecycleview.ERecycleView.currState.*;
 
@@ -98,7 +99,12 @@ public class ERecycleView extends RecyclerView {
             }
 
             if (footView != null) {
-                lastFootViewPosition = layoutManager.getPosition(footView);
+                try {
+                    // 一开始脚布局还没有进来，因为是复用的
+                    lastFootViewPosition = layoutManager.getPosition(footView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             // 判断条件：
             // 1、显示的是不是最后一个
