@@ -10,13 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 
 /**
- *
  * Created by v_chicunxiang on 2018/6/28.
  */
 
 public abstract class ExpandableAdapter extends RecyclerView.Adapter<ExpandableAdapter.sampleViewholder> {
-    private static final int GROUP = 10000;
-    private static final int ITEM  = 10001;
 
     @Override
     public sampleViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,9 +25,12 @@ public abstract class ExpandableAdapter extends RecyclerView.Adapter<ExpandableA
     public void onBindViewHolder(sampleViewholder holder, final int position) {
         FrameLayout groupParent = (FrameLayout) holder.itemView.findViewById(R.id.base_fl);
         View        grouItem    = onBindGroupView(holder, position);
+        groupParent.removeAllViews();
         groupParent.addView(grouItem);
+
         FrameLayout itemParent = (FrameLayout) holder.itemView.findViewById(R.id.base_fl1);
         View        childItem  = onBindItemView(holder, position);
+        itemParent.removeAllViews();
         itemParent.addView(childItem);
         itemParent.setVisibility(View.GONE);
         groupParent.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +78,6 @@ public abstract class ExpandableAdapter extends RecyclerView.Adapter<ExpandableA
     private void expandableGroup(View childAt, int position) {
         childAt.setVisibility(View.VISIBLE);
         ObjectAnimator.ofFloat(childAt, "alpha", 0, 1).setDuration(200).start();
-
     }
 
     public abstract View onBindItemView(RecyclerView.ViewHolder holder, int position);
