@@ -1,6 +1,10 @@
 # ERecycleView
 
-简单制作一个下拉刷新和加载更多，避免了加载第三方的时候项目过于臃肿
+新增了一个可扩展的adapter，直接需要使用扩展的recyclerview的，直接adapter继承ExpandableAdapter即可使用
+
+--------------------------
+
+一个下拉刷新和加载更多，避免了加载第三方的时候项目过于臃肿
 
 只用依赖上erecycleview即可进行使用
 
