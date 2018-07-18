@@ -12,3 +12,4 @@ build
 gradle
 .idea
 test
+androidTest

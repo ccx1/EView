@@ -1,9 +1,5 @@
 # ERecycleView
 
-新增了一个可扩展的adapter，直接需要使用扩展的recyclerview的，直接adapter继承ExpandableAdapter即可使用
-
-1. 似乎有点小问题，介意误用
-
 --------------------------
 
 一个下拉刷新和加载更多，避免了加载第三方的时候项目过于臃肿
@@ -72,3 +68,7 @@
 ### 日常修复
 
 1. 修复了一开始进来脚布局获取不到的bug
+
+新增了一个可扩展的adapter，直接需要使用扩展的recyclerview的，直接adapter继承ExpandableAdapter即可使用
+
+1. 似乎有点小问题，介意误用
