@@ -1,1 +1,1 @@
-include ':erecycleview', ':sample' , 'ewebview'
+include ':erecycleview', ':sample', ':evideoview' , 'ewebview'
