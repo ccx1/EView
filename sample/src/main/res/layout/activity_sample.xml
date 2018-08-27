@@ -23,7 +23,13 @@
         android:id="@+id/btn3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="webview"/>
+        android:text="webview" />
+
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="跳转安全键盘" />
 
 
 </LinearLayout>

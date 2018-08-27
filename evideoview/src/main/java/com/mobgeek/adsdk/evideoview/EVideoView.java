@@ -1,6 +1,8 @@
 package com.mobgeek.adsdk.evideoview;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,12 +32,11 @@ class EVideoView extends FrameLayout {
      * 视频文件地址
      */
     private             String       mPath        = "";
-
     private SurfaceView surfaceView;
-
     private VideoPlayerListener listener;
     private Context             mContext;
     private boolean isInitMediaPlay = true;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public EVideoView(@NonNull Context context) {
         super(context);
@@ -119,6 +120,25 @@ class EVideoView extends FrameLayout {
         return mMediaPlayer.isPlaying();
     }
 
+
+    private void postProgress() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 如果停下，就不再更新进度
+                if (isPlaying()){
+                    return;
+                }
+                if (mOnPlayStatusChangeListener != null) {
+                    mOnPlayStatusChangeListener.onProgressChange(getCurrentPosition(),getDuration());
+                }
+                mHandler.postDelayed(this,15);
+            }
+        },15);
+
+    }
+
+
     /**
      * surfaceView的监听器
      */
@@ -197,9 +217,6 @@ class EVideoView extends FrameLayout {
 
     public void setListener(VideoPlayerListener listener) {
         this.listener = listener;
-        if (mMediaPlayer != null) {
-            mMediaPlayer.setOnPreparedListener(listener);
-        }
     }
 
     /**
@@ -209,6 +226,7 @@ class EVideoView extends FrameLayout {
     public void start() {
         if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
+            postProgress();
             if (mOnPlayStatusChangeListener != null) {
                 mOnPlayStatusChangeListener.onStatusChange(VIDEO_START);
             }
@@ -223,6 +241,7 @@ class EVideoView extends FrameLayout {
             mMediaPlayer = null;
         }
     }
+
 
     public void pause() {
         if (mMediaPlayer != null) {
@@ -283,12 +302,13 @@ class EVideoView extends FrameLayout {
 
     private onPlayStatusChangeListener mOnPlayStatusChangeListener;
 
-    protected void setOnPlayStatusChangeListener(onPlayStatusChangeListener onPlayStatusChangeListener) {
+    public void setOnPlayStatusChangeListener(onPlayStatusChangeListener onPlayStatusChangeListener) {
         mOnPlayStatusChangeListener = onPlayStatusChangeListener;
     }
 
-    protected interface onPlayStatusChangeListener {
+    public interface onPlayStatusChangeListener {
         void onStatusChange(int status);
+        void onProgressChange(long progress, long max);
     }
 
 }
