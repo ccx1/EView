@@ -19,5 +19,11 @@
         android:layout_height="wrap_content"
         android:text="跳转可扩展的界面" />
 
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="webview"/>
+
 
 </LinearLayout>
