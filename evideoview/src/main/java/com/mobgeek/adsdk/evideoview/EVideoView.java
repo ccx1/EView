@@ -32,11 +32,11 @@ class EVideoView extends FrameLayout {
      * 视频文件地址
      */
     private             String       mPath        = "";
-    private SurfaceView surfaceView;
+    private SurfaceView         surfaceView;
     private VideoPlayerListener listener;
     private Context             mContext;
     private boolean isInitMediaPlay = true;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Handler mHandler        = new Handler(Looper.getMainLooper());
 
     public EVideoView(@NonNull Context context) {
         super(context);
@@ -55,7 +55,7 @@ class EVideoView extends FrameLayout {
 
     private void initVideoView(Context context) {
         mContext = context;
-//获取焦点
+        //获取焦点
         setFocusable(true);
     }
 
@@ -98,7 +98,8 @@ class EVideoView extends FrameLayout {
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT
                 , LayoutParams.MATCH_PARENT, Gravity.CENTER);
         surfaceView.setLayoutParams(layoutParams);
-//        surfaceView.setZOrderOnTop(true);
+        // 如果有两个surface，则会冲突，需要设置永远置顶
+        // surfaceView.setZOrderOnTop(true);
         this.addView(surfaceView);
     }
 
@@ -126,16 +127,15 @@ class EVideoView extends FrameLayout {
             @Override
             public void run() {
                 // 如果停下，就不再更新进度
-                if (isPlaying()){
+                if (isPlaying()) {
                     return;
                 }
                 if (mOnPlayStatusChangeListener != null) {
-                    mOnPlayStatusChangeListener.onProgressChange(getCurrentPosition(),getDuration());
+                    mOnPlayStatusChangeListener.onProgressChange(getCurrentPosition(), getDuration());
                 }
-                mHandler.postDelayed(this,15);
+                mHandler.postDelayed(this, 15);
             }
-        },15);
-
+        }, 15);
     }
 
 
@@ -153,7 +153,7 @@ class EVideoView extends FrameLayout {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            //surfaceview创建成功后，加载视频
+            // surfaceview创建成功后，加载视频
             start();
         }
 
@@ -168,7 +168,7 @@ class EVideoView extends FrameLayout {
      * 加载视频
      */
     private void load() {
-        //每次都要重新创建IMediaPlayer
+        // 每次都要重新创建IMediaPlayer
         createPlayer();
         // 理论上说是不允许修改多次的路径
         String dataSource = mMediaPlayer.getDataSource();
@@ -179,7 +179,7 @@ class EVideoView extends FrameLayout {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //给mediaPlayer设置视图
+        // 给mediaPlayer设置视图
         mMediaPlayer.setDisplay(surfaceView.getHolder());
         if (isInitMediaPlay) {
             mMediaPlayer.prepareAsync();
@@ -194,9 +194,9 @@ class EVideoView extends FrameLayout {
     private void createPlayer() {
         if (mMediaPlayer == null) {
             IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-//开启硬解码
-            //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+            // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+            // 开启硬解码
+            // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
             mMediaPlayer = new IjkMediaPlayer();
             mMediaPlayer.setLooping(false);
             isInitMediaPlay = true;
@@ -294,7 +294,7 @@ class EVideoView extends FrameLayout {
     }
 
 
-    public synchronized void seekTo(long l) {
+    public void seekTo(long l) {
         if (mMediaPlayer != null) {
             mMediaPlayer.seekTo(l);
         }
@@ -308,6 +308,7 @@ class EVideoView extends FrameLayout {
 
     public interface onPlayStatusChangeListener {
         void onStatusChange(int status);
+
         void onProgressChange(long progress, long max);
     }
 
