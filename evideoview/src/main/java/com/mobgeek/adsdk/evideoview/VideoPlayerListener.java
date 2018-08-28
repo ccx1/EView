@@ -2,7 +2,7 @@ package com.mobgeek.adsdk.evideoview;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-interface VideoPlayerListener extends IMediaPlayer.OnBufferingUpdateListener,
+public interface VideoPlayerListener extends IMediaPlayer.OnBufferingUpdateListener,
         IMediaPlayer.OnCompletionListener,
         IMediaPlayer.OnPreparedListener,
         IMediaPlayer.OnInfoListener,
