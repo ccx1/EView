@@ -30,6 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="跳转安全键盘" />
+    <Button
+        android:id="@+id/btn5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="放视频" />
 
 
 </LinearLayout>

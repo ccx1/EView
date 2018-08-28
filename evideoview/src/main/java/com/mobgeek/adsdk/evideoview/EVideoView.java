@@ -15,11 +15,21 @@ import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-class EVideoView extends FrameLayout {
+
+/**
+ * Created by chicunxiang on 2018/8/27.
+ *
+ * @史上最帅无敌创建者 ccx
+ * @创建时间 2018/8/27 10:31
+ */
+
+public class EVideoView extends FrameLayout {
 
 
     /**
@@ -193,11 +203,40 @@ class EVideoView extends FrameLayout {
      */
     private void createPlayer() {
         if (mMediaPlayer == null) {
-            IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-            // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+//            IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+//            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
             // 开启硬解码
-            // ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+//            IjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+
             mMediaPlayer = new IjkMediaPlayer();
+            try {
+                Method method = Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer")
+                        .getDeclaredMethod("setOption", int.class, String.class, long.class);
+                // 硬编码
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec",1);
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec-auto-rotate",1);
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec-handle-resolution-change",1);
+
+                // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_CODEC,"skip_loop_filter",48);
+                // 是否缓冲
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",1);
+                // 设置缓冲区,单位是kb
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",8 * 1024);
+                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",1);
+//                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",maxCacheSize);
+
+//                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",isBufferCache?1:0);
+                System.out.println("方法执行成功");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             mMediaPlayer.setLooping(false);
             isInitMediaPlay = true;
             if (listener != null) {

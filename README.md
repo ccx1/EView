@@ -24,4 +24,4 @@
 
     2). 接口使用进行封装
 
-    <a href="/doc/evideoview.md" >ijkplayer页面文档导航</a>
+    <a href="/doc/evideoview.md" >evideoview页面文档导航</a>

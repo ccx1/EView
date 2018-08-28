@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".ExpandableActivity" />
         <activity android:name=".WebActivity" />
-        <activity android:name=".CustomEditTextActivity"></activity>
+        <activity android:name=".CustomEditTextActivity" />
+        <activity android:name=".VideoActivity"></activity>
     </application>
 
 </manifest>

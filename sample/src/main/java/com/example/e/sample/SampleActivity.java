@@ -16,6 +16,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn2).setOnClickListener(this);
         findViewById(R.id.btn3).setOnClickListener(this);
         findViewById(R.id.btn4).setOnClickListener(this);
+        findViewById(R.id.btn5).setOnClickListener(this);
     }
 
     @Override
@@ -30,8 +31,11 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn3:
                 startActivity(new Intent(SampleActivity.this, WebActivity.class));
                 break;
-                case R.id.btn4:
+            case R.id.btn4:
                 startActivity(new Intent(SampleActivity.this, CustomEditTextActivity.class));
+                break;
+            case R.id.btn5:
+                startActivity(new Intent(SampleActivity.this, VideoActivity.class));
                 break;
         }
     }
