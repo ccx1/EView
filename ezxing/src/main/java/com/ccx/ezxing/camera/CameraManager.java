@@ -327,8 +327,8 @@ public final class CameraManager {
         }
         // Go ahead and assume it's YUV rather than die.
         // 让扫描的像素增大
-        return new PlanarYUVLuminanceSource(data, width, height, rect.left - 100, rect.top - 100,
-                rect.width() + 100, rect.height() + 100, false);
+        return new PlanarYUVLuminanceSource(data, width, height, 0, 0,
+                width, height, false);
 
 
     }
