@@ -37,8 +37,4 @@
     <a href="/doc/ezxing.md" >ezxing页面文档导航</a>
 
 
-    <a href="/sample-debug.apk">demoapk</a>
-
-
-
 ## ps: 懒得写fragment了，直接看着用吧。涉及到动态权限的，懒得写了，如果需要，可以去开一下
