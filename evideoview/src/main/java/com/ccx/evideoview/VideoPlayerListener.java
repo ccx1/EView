@@ -1,4 +1,4 @@
-package com.mobgeek.adsdk.evideoview;
+package com.ccx.evideoview;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 

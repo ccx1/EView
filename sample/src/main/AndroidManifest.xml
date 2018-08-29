@@ -22,7 +22,9 @@
         <activity android:name=".ExpandableActivity" />
         <activity android:name=".WebActivity" />
         <activity android:name=".CustomEditTextActivity" />
-        <activity android:name=".VideoActivity"></activity>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".ZXingActivity" />
+        <activity android:name=".ZXingSwitchActivity"></activity>
     </application>
 
 </manifest>

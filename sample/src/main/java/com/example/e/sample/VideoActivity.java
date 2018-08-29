@@ -3,11 +3,7 @@ package com.example.e.sample;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.mobgeek.adsdk.evideoview.EVideoView;
-import com.mobgeek.adsdk.evideoview.VideoPlayerListener;
-
-import tv.danmaku.ijk.media.player.IMediaPlayer;
-import tv.danmaku.ijk.media.player.IjkTimedText;
+import com.ccx.evideoview.EVideoView;
 
 public class VideoActivity extends AppCompatActivity {
 

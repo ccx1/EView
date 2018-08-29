@@ -1,4 +1,4 @@
-package com.mobgeek.adsdk.evideoview;
+package com.ccx.evideoview;
 
 import android.content.Context;
 import android.os.Handler;
@@ -227,7 +227,6 @@ public class EVideoView extends FrameLayout {
 //                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",maxCacheSize);
 
 //                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",isBufferCache?1:0);
-                System.out.println("方法执行成功");
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {

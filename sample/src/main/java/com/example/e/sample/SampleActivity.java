@@ -17,6 +17,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn3).setOnClickListener(this);
         findViewById(R.id.btn4).setOnClickListener(this);
         findViewById(R.id.btn5).setOnClickListener(this);
+        findViewById(R.id.btn6).setOnClickListener(this);
     }
 
     @Override
@@ -36,6 +37,9 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn5:
                 startActivity(new Intent(SampleActivity.this, VideoActivity.class));
+                break;
+            case R.id.btn6:
+                startActivity(new Intent(SampleActivity.this, ZXingSwitchActivity.class));
                 break;
         }
     }
