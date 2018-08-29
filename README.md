@@ -2,7 +2,7 @@
 
 --------------------------
 
-    <a hred="/sample-debug.apk">demoapk</a>
+
 
 ## 封装了几个view
 
@@ -35,6 +35,9 @@
     2). 留下了，生成二维码以及扫一扫的功能。
 
     <a href="/doc/ezxing.md" >ezxing页面文档导航</a>
+
+
+    <a hred="/sample-debug.apk">demoapk</a>
 
 
 
