@@ -2,6 +2,8 @@
 
 --------------------------
 
+    <a hred="/sample-debug.apk">demoapk</a>
+
 ## 封装了几个view
 
 1. RecyclerView的自定义构建
@@ -36,4 +38,4 @@
 
 
 
-## ps: 懒得写fragment了，直接看着用吧。
+## ps: 懒得写fragment了，直接看着用吧。涉及到动态权限的，懒得写了，如果需要，可以去开一下
