@@ -37,7 +37,7 @@
     <a href="/doc/ezxing.md" >ezxing页面文档导航</a>
 
 
-    <a hred="/sample-debug.apk">demoapk</a>
+    <a href="/sample-debug.apk">demoapk</a>
 
 
 
