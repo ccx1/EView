@@ -165,12 +165,13 @@ public class ZXingUtils {
     private static Map<DecodeHintType, Vector<BarcodeFormat>> getHints() {
         EnumMap<DecodeHintType, Vector<BarcodeFormat>> hints         = new EnumMap<>(DecodeHintType.class);
         Vector<BarcodeFormat>                          decodeFormats = new Vector<>(EnumSet.noneOf(BarcodeFormat.class));
-        decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
+        /*decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
         decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
         decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
         decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
         decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
+        decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);*/
+        decodeFormats.addAll(DecodeFormatManager.ALL);
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
         return hints;
     }

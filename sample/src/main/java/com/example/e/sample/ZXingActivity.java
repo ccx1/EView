@@ -22,6 +22,7 @@ public class ZXingActivity extends AppCompatActivity {
                 fragment = new ECreateEncodeZxingFragment();
                 break;
             case "camera":
+                getSupportActionBar().hide();
                 fragment = new ECameraZxingFragment();
                 break;
             case "select":

@@ -25,6 +25,8 @@ public class DecodeFormatManager {
     public static final Vector<BarcodeFormat> DATA_MATRIX_FORMATS = new Vector<>();
     public static final Vector<BarcodeFormat> AZTEC_FORMATS       = new Vector<>();
     public static final Vector<BarcodeFormat> PDF417_FORMATS      = new Vector<>();
+    public static final Vector<BarcodeFormat> ALL      = new Vector<>();
+
 
     static {
         PRODUCT_FORMATS = new Vector<>();
@@ -48,6 +50,27 @@ public class DecodeFormatManager {
         DATA_MATRIX_FORMATS.add(BarcodeFormat.DATA_MATRIX);
         AZTEC_FORMATS.add(BarcodeFormat.AZTEC);
         PDF417_FORMATS.add(BarcodeFormat.PDF_417);
+
+    }
+
+    static {
+        ALL.add(BarcodeFormat.AZTEC);
+        ALL.add(BarcodeFormat.CODABAR);
+        ALL.add(BarcodeFormat.CODE_39);
+        ALL.add(BarcodeFormat.CODE_93);
+        ALL.add(BarcodeFormat.CODE_128);
+        ALL.add(BarcodeFormat.DATA_MATRIX);
+        ALL.add(BarcodeFormat.EAN_8);
+        ALL.add(BarcodeFormat.EAN_13);
+        ALL.add(BarcodeFormat.ITF);
+        ALL.add(BarcodeFormat.MAXICODE);
+        ALL.add(BarcodeFormat.PDF_417);
+        ALL.add(BarcodeFormat.QR_CODE);
+        ALL.add(BarcodeFormat.RSS_14);
+        ALL.add(BarcodeFormat.RSS_EXPANDED);
+        ALL.add(BarcodeFormat.UPC_A);
+        ALL.add(BarcodeFormat.UPC_E);
+        ALL.add(BarcodeFormat.UPC_EAN_EXTENSION);
     }
 
     private static final Map<String, Vector<BarcodeFormat>> FORMATS_FOR_MODE;

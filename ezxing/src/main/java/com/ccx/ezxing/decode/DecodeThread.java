@@ -36,12 +36,13 @@ public class DecodeThread extends Thread {
         hints = new EnumMap<>(DecodeHintType.class);
         if (decodeFormats == null || decodeFormats.isEmpty()) {
             decodeFormats = new Vector<>(EnumSet.noneOf(BarcodeFormat.class));
-            decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.ALL);
         }
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
 
