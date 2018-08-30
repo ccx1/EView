@@ -26,6 +26,8 @@
 
     2). 接口使用进行封装
 
+    3). 因为奥运会将近？管理严，有很多直播源下架了，如果测试，可以修改直播源
+
     <a href="/doc/evideoview.md" >evideoview页面文档导航</a>
 
 4. android google zxing 封装，
