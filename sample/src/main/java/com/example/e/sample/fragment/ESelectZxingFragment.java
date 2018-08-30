@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ccx.ezxing.decode.DecodeResult;
 import com.ccx.ezxing.utils.ZXingUtils;
@@ -19,9 +21,12 @@ public class ESelectZxingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         DecodeResult decodeResult = ZXingUtils.encodeImage(BitmapFactory.decodeResource(getResources(), R.mipmap.max));
-        System.out.println(decodeResult.rawResult);
-        System.out.println(decodeResult.handingTime);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        Toast.makeText(getActivity(), "解析结果： " + decodeResult.rawResult + " ， 处理时间 : " + decodeResult.handingTime, Toast.LENGTH_SHORT).show();
+
+        TextView textView = new TextView(getActivity());
+        textView.setText("没有，懒得做选择图片选择了。你看代码把，一看就知道没有看readme,任性");
+
+        return textView;
     }
 }

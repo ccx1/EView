@@ -30,7 +30,7 @@
 
     <a href="/doc/evideoview.md" >evideoview页面文档导航</a>
 
-4. android google zxing 封装，
+4. android google zxing 封装，高效
 
     1). 除去了很多没有必要的功能
 
@@ -39,6 +39,8 @@
     3). 对条形码的数据做了处理，原先只能横向处理条形码。目前支持0度，90度，180度，270度,都可以扫描(微信也是这些角度，那我就这样算了吧)
 
     4). 新增解析图片。
+
+    5). 响应时间都在1秒之内，速度还可以.
 
     <a href="/doc/ezxing.md" >ezxing页面文档导航</a>
 
