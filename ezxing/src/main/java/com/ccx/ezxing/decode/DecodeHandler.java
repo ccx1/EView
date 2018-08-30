@@ -80,7 +80,7 @@ final class DecodeHandler extends Handler {
         if (rawResult != null) {
             DecodeResult decodeResult = new DecodeResult();
             decodeResult.handingTime = (end - start + 0f) / 1000 + "";
-            decodeResult.rawResult = rawResult;
+            decodeResult.rawResult = rawResult.getText();
             Message message = Message.obtain(captureActivityHandler, Conts.Scan.SUECCESS, decodeResult);
             message.sendToTarget();
         } else {
@@ -126,10 +126,7 @@ final class DecodeHandler extends Handler {
         return neoData;
     }
 
-    protected static class DecodeResult {
-        String handingTime;
-        Result rawResult;
-    }
+
 
 
 }

@@ -48,8 +48,8 @@ public class ResultHandler extends Handler {
                 break;
             case Conts.Result.SUECCESS:
                 state = State.SUCCESS;
-                DecodeHandler.DecodeResult decodeResult = (DecodeHandler.DecodeResult) message.obj;
-                mScannerView.handleMessage(decodeResult.rawResult.getText(),decodeResult.handingTime);
+                DecodeResult decodeResult = (DecodeResult) message.obj;
+                mScannerView.handleMessage(decodeResult.rawResult,decodeResult.handingTime);
                 break;
             case Conts.Result.FAIL:
                 // We're decoding as fast as possible, so when one decode fails, start another.

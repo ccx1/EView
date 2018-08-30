@@ -18,13 +18,13 @@ public class DecodeFormatManager {
 
     private static final Pattern COMMA_PATTERN = Pattern.compile(",");
 
-    static final         Vector<BarcodeFormat> PRODUCT_FORMATS;
-    static final         Vector<BarcodeFormat> INDUSTRIAL_FORMATS;
+    public static final  Vector<BarcodeFormat> PRODUCT_FORMATS;
+    public static final  Vector<BarcodeFormat> INDUSTRIAL_FORMATS;
     private static final Vector<BarcodeFormat> ONE_D_FORMATS;
-    static final Vector<BarcodeFormat> QR_CODE_FORMATS     = new Vector<>();
-    static final Vector<BarcodeFormat> DATA_MATRIX_FORMATS = new Vector<>();
-    static final Vector<BarcodeFormat> AZTEC_FORMATS       = new Vector<>();
-    static final Vector<BarcodeFormat> PDF417_FORMATS      = new Vector<>();
+    public static final Vector<BarcodeFormat> QR_CODE_FORMATS     = new Vector<>();
+    public static final Vector<BarcodeFormat> DATA_MATRIX_FORMATS = new Vector<>();
+    public static final Vector<BarcodeFormat> AZTEC_FORMATS       = new Vector<>();
+    public static final Vector<BarcodeFormat> PDF417_FORMATS      = new Vector<>();
 
     static {
         PRODUCT_FORMATS = new Vector<>();

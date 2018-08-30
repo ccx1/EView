@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.e.sample.fragment.ECameraZxingFragment;
 import com.example.e.sample.fragment.ECreateEncodeZxingFragment;
+import com.example.e.sample.fragment.ESelectZxingFragment;
 
 public class ZXingActivity extends AppCompatActivity {
 
@@ -23,6 +24,8 @@ public class ZXingActivity extends AppCompatActivity {
             case "camera":
                 fragment = new ECameraZxingFragment();
                 break;
+            case "select":
+                fragment = new ESelectZxingFragment();
         }
 
         getSupportFragmentManager().beginTransaction().add(R.id.zxing_fl,fragment).commit();

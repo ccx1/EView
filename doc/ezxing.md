@@ -68,4 +68,21 @@
          mBitmap = ZXingUtils.encodeAsBitmap(getActivity(), text);
 
 
-新增条形码扫描，原先不灵敏，只能横向扫描才能产生结果，目前做了优化，支持横向，纵向，斜度的暂时还不支持
+新增条形码扫描，原先不灵敏，只能横向扫描才能产生结果，目前做了优化，支持横向，纵向，斜度的暂时还不支持.
+
+新增解析图片，emm，只支持bitmap形式传递，不服你打我。
+
+uri不想做了，反正最终就是以bitmap形式来的，如果是rxjava，这里也可以搞成异步，性能消耗小一点，我试了一下，解析一张二维码只用0.079秒，还是蛮高效的
+
+
+        DecodeResult decodeResult = ZXingUtils.encodeImage(BitmapFactory.decodeResource(getResources(), R.mipmap.max));
+
+
+max是我传的二维码图，你们想传文件也好，什么都可以，BitmapFactory都能给搞成bitmap。我就不搞了。接下来是这是参数
+
+
+        public static DecodeResult encodeImage(Bitmap bitmap)
+
+
+然后。DecodeResult目前只有两个字段。一个是结果，一个是处理时间（秀优越用的）。好了，就这样把
+
