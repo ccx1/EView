@@ -13,3 +13,5 @@ gradle
 .idea
 test
 androidTest
+android
+import-summary.txt

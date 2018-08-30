@@ -66,3 +66,6 @@
 
 
          mBitmap = ZXingUtils.encodeAsBitmap(getActivity(), text);
+
+
+新增条形码扫描，原先不灵敏，只能横向扫描才能产生结果，目前做了优化，支持横向，纵向，斜度的暂时还不支持

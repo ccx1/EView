@@ -60,6 +60,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
 
   @Override
   public synchronized void onAutoFocus(boolean success, Camera theCamera) {
+//    System.out.println("自动对焦");
     focusing = false;
     autoFocusAgainLater();
   }

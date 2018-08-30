@@ -19,6 +19,7 @@ package com.ccx.ezxing.decode;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.Nullable;
 
 import com.ccx.ezxing.camera.CameraManager;
 import com.ccx.ezxing.conts.Conts;
@@ -53,10 +54,10 @@ final class DecodeHandler extends Handler {
         if (message == null || !running) {
             return;
         }
-        if (message.what == 1){
+        if (message.what == 1) {
             running = false;
             Looper.myLooper().quit();
-        }else {
+        } else {
             decode((byte[]) message.obj, message.arg1, message.arg2);
         }
     }
@@ -70,17 +71,10 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        long                     start     = System.currentTimeMillis();
-        Result                   rawResult = null;
-        PlanarYUVLuminanceSource source    = cameraManager.buildLuminanceSource(data, width, height);
-        if (source != null) {
-            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-            try {
-                rawResult = multiFormatReader.decodeWithState(bitmap);
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            multiFormatReader.reset();
+        long   start     = System.currentTimeMillis();
+        Result rawResult = getResult(data, width, height);
+        if (rawResult == null) {
+            rawResult = getResult(rotateByteDegree90(data, width, height), width, height);
         }
         long end = System.currentTimeMillis();
         if (rawResult != null) {
@@ -94,6 +88,43 @@ final class DecodeHandler extends Handler {
         }
     }
 
+    @Nullable
+    private Result getResult(byte[] data, int width, int height) {
+        Result                   rawResult = null;
+        PlanarYUVLuminanceSource source    = cameraManager.buildLuminanceSource(data, width, height);
+        if (source != null) {
+            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+            try {
+                rawResult = multiFormatReader.decodeWithState(bitmap);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+            multiFormatReader.reset();
+        }
+        return rawResult;
+    }
+
+
+    private byte[] rotateByteDegree90(byte[] data, int width, int height) {
+        byte[] neoData = new byte[width * height * 3 / 2];
+        int    i       = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = height - 1; y >= 0; y--) {
+                neoData[i] = data[y * width + x];
+                i++;
+            }
+        }
+        i = width * height * 3 / 2 - 1;
+        for (int x = width - 1; x > 0; x = x - 2) {
+            for (int y = 0; y < height / 2; y++) {
+                neoData[i] = data[(width * height) + (y * width) + x];
+                i--;
+                neoData[i] = data[(width * height) + (y * width) + (x - 1)];
+                i--;
+            }
+        }
+        return neoData;
+    }
 
     protected static class DecodeResult {
         String handingTime;

@@ -43,22 +43,22 @@ public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
 
-    private static final int MIN_FRAME_WIDTH  = 240;
+    private static final int MIN_FRAME_WIDTH = 240;
     private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH  = 1200; // = 5/8 * 1920
+    private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
     private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
 
-    private final Context                    context;
+    private final Context context;
     private final CameraConfigurationManager configManager;
-    private       OpenCamera                 camera;
-    private       AutoFocusManager           autoFocusManager;
-    private       Rect                       framingRect;
-    private       Rect                       framingRectInPreview;
-    private       boolean                    initialized;
-    private       boolean                    previewing;
+    private OpenCamera camera;
+    private AutoFocusManager autoFocusManager;
+    private Rect framingRect;
+    private Rect framingRectInPreview;
+    private boolean initialized;
+    private boolean previewing;
     private int requestedCameraId = OpenCameraInterface.NO_REQUESTED_CAMERA;
-    private       int             requestedFramingRectWidth;
-    private       int             requestedFramingRectHeight;
+    private int requestedFramingRectWidth;
+    private int requestedFramingRectHeight;
     /**
      * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
      * clear the handler so it will only receive one message.
@@ -97,9 +97,9 @@ public final class CameraManager {
             }
         }
 
-        Camera            cameraObject        = theCamera.getCamera();
-        Camera.Parameters parameters          = cameraObject.getParameters();
-        String            parametersFlattened = parameters == null ? null : parameters.flatten(); // Save these, temporarily
+        Camera cameraObject = theCamera.getCamera();
+        Camera.Parameters parameters = cameraObject.getParameters();
+        String parametersFlattened = parameters == null ? null : parameters.flatten(); // Save these, temporarily
         try {
             configManager.setDesiredCameraParameters(theCamera, false);
         } catch (RuntimeException re) {
@@ -223,11 +223,11 @@ public final class CameraManager {
                 return null;
             }
 
-            int width  = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
+            int width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
             int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
 
             int leftOffset = (screenResolution.x - width) / 2;
-            int topOffset  = (screenResolution.y - height) / 2;
+            int topOffset = (screenResolution.y - height) / 2;
             framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
             Log.d(TAG, "Calculated framing rect: " + framingRect);
         }
@@ -257,7 +257,7 @@ public final class CameraManager {
             if (framingRect == null) {
                 return null;
             }
-            Rect  rect             = new Rect(framingRect);
+            Rect rect = new Rect(framingRect);
             Point cameraResolution = configManager.getCameraResolution();
             Point screenResolution = configManager.getScreenResolution();
             if (cameraResolution == null || screenResolution == null) {
@@ -288,7 +288,7 @@ public final class CameraManager {
      * Allows third party apps to specify the scanning rectangle dimensions, rather than determine
      * them automatically based on screen resolution.
      *
-     * @param width  The width in pixels to scan.
+     * @param width The width in pixels to scan.
      * @param height The height in pixels to scan.
      */
     public synchronized void setManualFramingRect(int width, int height) {
@@ -301,7 +301,7 @@ public final class CameraManager {
                 height = screenResolution.y;
             }
             int leftOffset = (screenResolution.x - width) / 2;
-            int topOffset  = (screenResolution.y - height) / 2;
+            int topOffset = (screenResolution.y - height) / 2;
             framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
             Log.d(TAG, "Calculated manual framing rect: " + framingRect);
             framingRectInPreview = null;
@@ -315,8 +315,8 @@ public final class CameraManager {
      * A factory method to build the appropriate LuminanceSource object based on the format
      * of the preview buffers, as described by Camera.Parameters.
      *
-     * @param data   A preview frame.
-     * @param width  The width of the image.
+     * @param data A preview frame.
+     * @param width The width of the image.
      * @param height The height of the image.
      * @return A PlanarYUVLuminanceSource instance.
      */
@@ -326,11 +326,10 @@ public final class CameraManager {
             return null;
         }
         // Go ahead and assume it's YUV rather than die.
-        // 让扫描的像素增大
+//        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
+//                rect.width(), rect.height(), false);
         return new PlanarYUVLuminanceSource(data, width, height, 0, 0,
                 width, height, false);
-
-
     }
 
 }

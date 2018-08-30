@@ -1,7 +1,9 @@
 package com.ccx.ezxing.decode;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 
 import com.ccx.ezxing.camera.CameraManager;
 import com.google.zxing.BarcodeFormat;
@@ -9,6 +11,7 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
@@ -32,12 +35,14 @@ public class DecodeThread extends Thread {
         this.captureActivityHandler = captureActivityHandler;
         hints = new EnumMap<>(DecodeHintType.class);
         if (decodeFormats == null || decodeFormats.isEmpty()) {
-            decodeFormats = new Vector<BarcodeFormat>();
-            decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
+            decodeFormats = new Vector<>(EnumSet.noneOf(BarcodeFormat.class));
+            decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
         }
-
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
 
         if (characterSet != null) {
