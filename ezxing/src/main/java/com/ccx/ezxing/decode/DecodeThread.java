@@ -1,9 +1,7 @@
 package com.ccx.ezxing.decode;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 
 import com.ccx.ezxing.camera.CameraManager;
 import com.google.zxing.BarcodeFormat;
@@ -36,15 +34,20 @@ public class DecodeThread extends Thread {
         hints = new EnumMap<>(DecodeHintType.class);
         if (decodeFormats == null || decodeFormats.isEmpty()) {
             decodeFormats = new Vector<>(EnumSet.noneOf(BarcodeFormat.class));
-//            decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
-//            decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
-//            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-//            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-//            decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
-//            decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
-            decodeFormats.addAll(DecodeFormatManager.ALL);
+            decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
+            decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);
+//            decodeFormats.addAll(DecodeFormatManager.COMMON);
+//            decodeFormats.addAll(DecodeFormatManager.ALL);
         }
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
+//        hints.put(DecodeHintType.TRY_HARDER, true);
+//        hints.put(DecodeHintType.PURE_BARCODE, true);
+//        hints.put(DecodeHintType.ASSUME_CODE_39_CHECK_DIGIT, true);
+//        hints.put(DecodeHintType.ASSUME_GS1, true);
 
         if (characterSet != null) {
             hints.put(DecodeHintType.CHARACTER_SET, characterSet);

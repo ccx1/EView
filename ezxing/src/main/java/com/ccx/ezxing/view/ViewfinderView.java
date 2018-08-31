@@ -11,19 +11,20 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.ccx.ezxing.R;
-import com.google.zxing.ResultPoint;
 import com.ccx.ezxing.camera.CameraManager;
+import com.google.zxing.ResultPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ViewfinderView extends View {
 
-    private static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
-    private static final long ANIMATION_DELAY = 80L;
-    private static final int CURRENT_POINT_OPACITY = 0xA0;
-    private static final int MAX_RESULT_POINTS = 20;
-    private static final int POINT_SIZE = 6;
+    private static final int[] SCANNER_ALPHA         = {0, 64, 128, 192, 255, 192, 128, 64};
+    private static final long  ANIMATION_DELAY       = 80L;
+    private static final int   CURRENT_POINT_OPACITY = 0xA0;
+    private static final int   MAX_RESULT_POINTS     = 20;
+    private static final int   POINT_SIZE            = 6;
+    private final Context mContext;
 
     private       CameraManager     cameraManager;
     private final Paint             paint;
@@ -39,7 +40,7 @@ public final class ViewfinderView extends View {
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        this.mContext = context;
         // Initialize these once for performance rather than calling them every time in onDraw().
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         Resources resources = getResources();
@@ -59,6 +60,7 @@ public final class ViewfinderView extends View {
     @SuppressLint("DrawAllocation")
     @Override
     public void onDraw(Canvas canvas) {
+
         if (cameraManager == null) {
             return; // not ready yet, early draw before done configuring
         }
@@ -133,6 +135,7 @@ public final class ViewfinderView extends View {
                     frame.right + POINT_SIZE,
                     frame.bottom + POINT_SIZE);
         }
+
     }
 
     public void drawViewfinder() {

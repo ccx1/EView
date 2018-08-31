@@ -20,7 +20,7 @@ public class ESelectZxingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        DecodeResult decodeResult = ZXingUtils.encodeImage(BitmapFactory.decodeResource(getResources(), R.mipmap.max));
+        DecodeResult decodeResult = ZXingUtils.decodeImage(BitmapFactory.decodeResource(getResources(), R.mipmap.max));
 
         Toast.makeText(getActivity(), "解析结果： " + decodeResult.rawResult + " ， 处理时间 : " + decodeResult.handingTime, Toast.LENGTH_SHORT).show();
 

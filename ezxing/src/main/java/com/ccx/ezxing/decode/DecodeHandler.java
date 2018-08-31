@@ -71,7 +71,17 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        long   start     = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
+
+        if (width < height) {
+            // portrait
+            byte[] rotatedData = new byte[data.length];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++)
+                    rotatedData[y * width + width - x - 1] = data[y + x * height];
+            }
+            data = rotatedData;
+        }
         Result rawResult = getResult(data, width, height);
         if (rawResult == null) {
             rawResult = getResult(rotateByteDegree90(data, width, height), width, height);
@@ -125,8 +135,6 @@ final class DecodeHandler extends Handler {
         }
         return neoData;
     }
-
-
 
 
 }

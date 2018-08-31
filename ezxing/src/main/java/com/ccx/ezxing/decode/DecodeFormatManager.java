@@ -26,7 +26,7 @@ public class DecodeFormatManager {
     public static final Vector<BarcodeFormat> AZTEC_FORMATS       = new Vector<>();
     public static final Vector<BarcodeFormat> PDF417_FORMATS      = new Vector<>();
     public static final Vector<BarcodeFormat> ALL      = new Vector<>();
-
+    public static final Vector<BarcodeFormat> COMMON      = new Vector<>();
 
     static {
         PRODUCT_FORMATS = new Vector<>();
@@ -36,40 +36,36 @@ public class DecodeFormatManager {
         PRODUCT_FORMATS.add(BarcodeFormat.EAN_8);
         PRODUCT_FORMATS.add(BarcodeFormat.RSS_14);
         PRODUCT_FORMATS.add(BarcodeFormat.RSS_EXPANDED);
+
         INDUSTRIAL_FORMATS = new Vector<>();
         INDUSTRIAL_FORMATS.add(BarcodeFormat.CODE_39);
         INDUSTRIAL_FORMATS.add(BarcodeFormat.CODE_93);
         INDUSTRIAL_FORMATS.add(BarcodeFormat.CODE_128);
         INDUSTRIAL_FORMATS.add(BarcodeFormat.ITF);
         INDUSTRIAL_FORMATS.add(BarcodeFormat.CODABAR);
+
         ONE_D_FORMATS = new Vector<>();
         ONE_D_FORMATS.addAll(PRODUCT_FORMATS);
         ONE_D_FORMATS.addAll(INDUSTRIAL_FORMATS);
+
+        COMMON.add(BarcodeFormat.CODE_128);
+        COMMON.add(BarcodeFormat.QR_CODE);
 
         QR_CODE_FORMATS.add(BarcodeFormat.QR_CODE);
         DATA_MATRIX_FORMATS.add(BarcodeFormat.DATA_MATRIX);
         AZTEC_FORMATS.add(BarcodeFormat.AZTEC);
         PDF417_FORMATS.add(BarcodeFormat.PDF_417);
-
     }
 
     static {
-        ALL.add(BarcodeFormat.AZTEC);
-        ALL.add(BarcodeFormat.CODABAR);
-        ALL.add(BarcodeFormat.CODE_39);
-        ALL.add(BarcodeFormat.CODE_93);
-        ALL.add(BarcodeFormat.CODE_128);
-        ALL.add(BarcodeFormat.DATA_MATRIX);
-        ALL.add(BarcodeFormat.EAN_8);
-        ALL.add(BarcodeFormat.EAN_13);
-        ALL.add(BarcodeFormat.ITF);
+        ALL.addAll(QR_CODE_FORMATS);
+        ALL.addAll(DATA_MATRIX_FORMATS);
+        ALL.addAll(AZTEC_FORMATS);
+        ALL.addAll(PDF417_FORMATS);
+        ALL.addAll(ONE_D_FORMATS);
+        ALL.addAll(INDUSTRIAL_FORMATS);
+        ALL.addAll(PRODUCT_FORMATS);
         ALL.add(BarcodeFormat.MAXICODE);
-        ALL.add(BarcodeFormat.PDF_417);
-        ALL.add(BarcodeFormat.QR_CODE);
-        ALL.add(BarcodeFormat.RSS_14);
-        ALL.add(BarcodeFormat.RSS_EXPANDED);
-        ALL.add(BarcodeFormat.UPC_A);
-        ALL.add(BarcodeFormat.UPC_E);
         ALL.add(BarcodeFormat.UPC_EAN_EXTENSION);
     }
 

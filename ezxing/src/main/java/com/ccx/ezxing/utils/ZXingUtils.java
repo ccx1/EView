@@ -2,15 +2,14 @@ package com.ccx.ezxing.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.Display;
 import android.view.WindowManager;
 
 import com.ccx.ezxing.DecodeType;
+import com.ccx.ezxing.binarizer.RandomBinarizer;
 import com.ccx.ezxing.decode.DecodeFormatManager;
 import com.ccx.ezxing.decode.DecodeResult;
 import com.google.zxing.BarcodeFormat;
@@ -24,7 +23,6 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.common.HybridBinarizer;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -117,7 +115,7 @@ public class ZXingUtils {
     }
 
 
-    public static DecodeResult encodeImage(Bitmap bitmap) {
+    public static DecodeResult decodeImage(Bitmap bitmap) {
         long start = System.currentTimeMillis();
         bitmap = getSmallerBitmap(bitmap);
         int   width  = bitmap.getWidth();
@@ -131,13 +129,15 @@ public class ZXingUtils {
         MultiFormatReader  multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(getHints());
 
-        BinaryBitmap neoBitmap = new BinaryBitmap(new HybridBinarizer(source));
+        BinaryBitmap neoBitmap = new BinaryBitmap(new RandomBinarizer(source));
         try {
             result = multiFormatReader.decodeWithState(neoBitmap);
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
         long         end          = System.currentTimeMillis();
+        bitmap.recycle();
+        System.gc();
         DecodeResult decodeResult = new DecodeResult();
         if (result != null) {
             decodeResult.rawResult = result.getText();
@@ -162,15 +162,46 @@ public class ZXingUtils {
     }
 
 
+    private static Bitmap addLogo(Bitmap src, Bitmap logo) {
+        if (src == null) {
+            return null;
+        }
+        if (logo == null) {
+            return src;
+        }
+        //获取图片的宽高
+        int srcWidth = src.getWidth();
+        int srcHeight = src.getHeight();
+        int logoWidth = logo.getWidth();
+        int logoHeight = logo.getHeight();
+        if (srcWidth == 0 || srcHeight == 0) {
+            return null;
+        }
+        if (logoWidth == 0 || logoHeight == 0) {
+            return src;
+        }
+        //logo大小为二维码整体大小的1/5
+        float scaleFactor = srcWidth * 1.0f / 5 / logoWidth;
+        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        try {
+            Canvas canvas = new Canvas(bitmap);
+            canvas.drawBitmap(src, 0, 0, null);
+            canvas.scale(scaleFactor, scaleFactor, srcWidth / 2, srcHeight / 2);
+            canvas.drawBitmap(logo, (srcWidth - logoWidth) / 2, (srcHeight - logoHeight) / 2, null);
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.restore();
+        } catch (Exception e) {
+            bitmap = null;
+            e.getStackTrace();
+        }
+        return bitmap;
+    }
+
+
+
     private static Map<DecodeHintType, Vector<BarcodeFormat>> getHints() {
         EnumMap<DecodeHintType, Vector<BarcodeFormat>> hints         = new EnumMap<>(DecodeHintType.class);
         Vector<BarcodeFormat>                          decodeFormats = new Vector<>(EnumSet.noneOf(BarcodeFormat.class));
-        /*decodeFormats.addAll(DecodeFormatManager.PRODUCT_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.INDUSTRIAL_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.AZTEC_FORMATS);
-        decodeFormats.addAll(DecodeFormatManager.PDF417_FORMATS);*/
         decodeFormats.addAll(DecodeFormatManager.ALL);
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
         return hints;

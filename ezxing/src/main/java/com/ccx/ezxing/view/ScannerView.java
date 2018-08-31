@@ -6,11 +6,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.ccx.ezxing.DecodeType;
 import com.ccx.ezxing.camera.CameraManager;
-import com.ccx.ezxing.conts.Conts;
 import com.ccx.ezxing.decode.AmbientLightManager;
 import com.ccx.ezxing.decode.ResultHandler;
 import com.ccx.ezxing.listener.ParsingCompleteListener;
@@ -91,7 +88,6 @@ public class ScannerView extends FrameLayout {
 
     public void handleMessage(String text, String handingTime) {
         if (parsingCompleteListener!=null) {
-            parsingCompleteListener.onComplete(text,handingTime);
             parsingCompleteListener.onComplete(text,handingTime,ZXingUtils.regexText(text));
         }
     }
