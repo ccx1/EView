@@ -20,6 +20,7 @@ public class ECameraZxingFragment extends Fragment {
 
     private FragmentActivity mActivity;
     private ScannerView      mScannerView;
+    private boolean isOpen = false;
 
     @Nullable
     @Override
@@ -34,7 +35,6 @@ public class ECameraZxingFragment extends Fragment {
                 System.out.println(text);
                 System.out.println(handingTime);
                 Toast.makeText(mActivity, "检测到扫描结果 : " + text + " , 消耗时间 ：" + handingTime + " 秒", Toast.LENGTH_SHORT).show();
-
                 switch (type) {
                     case EMAIL:
                         break;
@@ -45,6 +45,13 @@ public class ECameraZxingFragment extends Fragment {
                     case URL:
                         break;
                 }
+            }
+        });
+        view.findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isOpen = !isOpen;
+                mScannerView.openFlash(isOpen);
             }
         });
         return view;

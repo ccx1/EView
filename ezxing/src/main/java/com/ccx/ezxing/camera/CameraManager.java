@@ -123,6 +123,11 @@ public final class CameraManager {
 
     }
 
+
+    public OpenCamera getCamera() {
+        return camera;
+    }
+
     public synchronized boolean isOpen() {
         return camera != null;
     }

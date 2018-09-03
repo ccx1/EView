@@ -23,9 +23,11 @@ import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
@@ -40,47 +42,41 @@ public class ZXingUtils {
     private static final int WHITE = 0xFFFFFFFF;
     private static final int BLACK = 0xFF000000;
 
-    public static Bitmap encodeAsBitmap(Context context, String contents) {
-        WindowManager manager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
-        assert manager != null;
-        Display display     = manager.getDefaultDisplay();
-        Point   displaySize = new Point();
-        display.getSize(displaySize);
-        int screenWdith      = displaySize.x;
-        int screenHeight     = displaySize.y;
-        int smallerDimension = screenWdith < screenHeight ? screenWdith : screenHeight;
-        smallerDimension = smallerDimension * 7 / 8;
+
+    /**
+     * @param contents       内容
+     * @param widthAndHeight 宽高，因为是正方形
+     * @return bitmap
+     */
+    public static Bitmap encodeAsBitmap(String contents, int widthAndHeight) {
         if (contents == null) {
             return null;
         }
-        Map<EncodeHintType, Object> hints    = null;
-        String                      encoding = guessAppropriateEncoding(contents);
-        if (encoding != null) {
-            hints = new EnumMap<>(EncodeHintType.class);
-            hints.put(EncodeHintType.CHARACTER_SET, encoding);
-        }
-        BitMatrix result = null;
+        Hashtable<EncodeHintType, String> hints = new Hashtable<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+        BitMatrix matrix = null;
         try {
-            BarcodeFormat format = BarcodeFormat.QR_CODE;
-            result = new MultiFormatWriter().encode(contents, format, smallerDimension, smallerDimension, hints);
-        } catch (IllegalArgumentException iae) {
-            // Unsupported format
-            iae.printStackTrace();
+            matrix = new MultiFormatWriter().encode(contents,
+                    BarcodeFormat.QR_CODE, widthAndHeight, widthAndHeight);
         } catch (WriterException e) {
             e.printStackTrace();
         }
-        assert result != null;
-        int   width  = result.getWidth();
-        int   height = result.getHeight();
+        if (matrix == null) {
+            return null;
+        }
+        int   width  = matrix.getWidth();
+        int   height = matrix.getHeight();
         int[] pixels = new int[width * height];
+
         for (int y = 0; y < height; y++) {
-            int offset = y * width;
             for (int x = 0; x < width; x++) {
-                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+                if (matrix.get(x, y)) {
+                    pixels[y * width + x] = BLACK;
+                }
             }
         }
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(width, height,
+                Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
         return bitmap;
     }
@@ -122,20 +118,19 @@ public class ZXingUtils {
         int   height = bitmap.getHeight();
         int[] pixels = new int[width * height];
         bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-
         // 查看源码发现还有这个子类
         RGBLuminanceSource source            = new RGBLuminanceSource(width, height, pixels);
         Result             result            = null;
         MultiFormatReader  multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(getHints());
 
-        BinaryBitmap neoBitmap = new BinaryBitmap(new RandomBinarizer(source));
+        BinaryBitmap neoBitmap = new BinaryBitmap(new HybridBinarizer(source));
         try {
             result = multiFormatReader.decodeWithState(neoBitmap);
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-        long         end          = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
         bitmap.recycle();
         System.gc();
         DecodeResult decodeResult = new DecodeResult();
@@ -162,7 +157,7 @@ public class ZXingUtils {
     }
 
 
-    private static Bitmap addLogo(Bitmap src, Bitmap logo) {
+    public static Bitmap addLogo(Bitmap src, Bitmap logo) {
         if (src == null) {
             return null;
         }
@@ -170,9 +165,9 @@ public class ZXingUtils {
             return src;
         }
         //获取图片的宽高
-        int srcWidth = src.getWidth();
-        int srcHeight = src.getHeight();
-        int logoWidth = logo.getWidth();
+        int srcWidth   = src.getWidth();
+        int srcHeight  = src.getHeight();
+        int logoWidth  = logo.getWidth();
         int logoHeight = logo.getHeight();
         if (srcWidth == 0 || srcHeight == 0) {
             return null;
@@ -181,8 +176,8 @@ public class ZXingUtils {
             return src;
         }
         //logo大小为二维码整体大小的1/5
-        float scaleFactor = srcWidth * 1.0f / 5 / logoWidth;
-        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        float  scaleFactor = srcWidth * 1.0f / 5 / logoWidth;
+        Bitmap bitmap      = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
         try {
             Canvas canvas = new Canvas(bitmap);
             canvas.drawBitmap(src, 0, 0, null);
@@ -196,7 +191,6 @@ public class ZXingUtils {
         }
         return bitmap;
     }
-
 
 
     private static Map<DecodeHintType, Vector<BarcodeFormat>> getHints() {

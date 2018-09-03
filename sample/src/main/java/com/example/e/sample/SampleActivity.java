@@ -33,7 +33,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(SampleActivity.this, WebActivity.class));
                 break;
             case R.id.btn4:
-                startActivity(new Intent(SampleActivity.this, CustomEditTextActivity.class));
+                startActivity(new Intent(SampleActivity.this, SafeEditTextActivity.class));
                 break;
             case R.id.btn5:
                 startActivity(new Intent(SampleActivity.this, VideoActivity.class));

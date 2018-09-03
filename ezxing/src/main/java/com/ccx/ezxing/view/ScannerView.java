@@ -1,29 +1,44 @@
 package com.ccx.ezxing.view;
 
 import android.content.Context;
+import android.hardware.Camera;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.ccx.ezxing.camera.CameraManager;
+import com.ccx.ezxing.camera.open.OpenCamera;
 import com.ccx.ezxing.decode.AmbientLightManager;
+import com.ccx.ezxing.decode.DecodeFormatManager;
 import com.ccx.ezxing.decode.ResultHandler;
 import com.ccx.ezxing.listener.ParsingCompleteListener;
 import com.ccx.ezxing.utils.ZXingUtils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.DecodeHintType;
 
 import java.io.IOException;
+import java.util.Vector;
 
 public class ScannerView extends FrameLayout {
 
-    private Context        mContext;
-    private ViewfinderView mViewfinderView;
-    private CameraManager  cameraManager;
-    private boolean        hasSurface;
-    private ResultHandler  handler;
+    private Context                 mContext;
+    private ViewfinderView          mViewfinderView;
+    private CameraManager           cameraManager;
+    private boolean                 hasSurface;
+    private ResultHandler           handler;
     private ParsingCompleteListener parsingCompleteListener;
-    private SurfaceView mSurfaceView;
+    private SurfaceView             mSurfaceView;
+    private boolean Product    = true;
+    private boolean Industrial = true;
+    private boolean QrCode     = true;
+    private boolean DataMatrix = true;
+    private boolean Aztec;
+    private boolean Pdf417;
 
     public ScannerView(Context context) {
         super(context);
@@ -43,15 +58,7 @@ public class ScannerView extends FrameLayout {
 
     private void initView(Context context) {
         this.mContext = context;
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        this.setLayoutParams(layoutParams);
-        mSurfaceView = new SurfaceView(mContext);
-        mSurfaceView.setLayoutParams(layoutParams);
-        this.addView(mSurfaceView);
-        mSurfaceView.setZOrderOnTop(false);
-        mViewfinderView = new ViewfinderView(mContext, null);
-        mViewfinderView.setLayoutParams(layoutParams);
-        this.addView(mViewfinderView);
+        initBasicView();
         cameraManager = new CameraManager(mContext.getApplicationContext());
         AmbientLightManager ambientLightManager = new AmbientLightManager(mContext);
         mViewfinderView.setCameraManager(cameraManager);
@@ -64,6 +71,46 @@ public class ScannerView extends FrameLayout {
         }
     }
 
+    private void initBasicView() {
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        this.setLayoutParams(layoutParams);
+        mSurfaceView = new SurfaceView(mContext);
+        mSurfaceView.setLayoutParams(layoutParams);
+        this.addView(mSurfaceView);
+
+        mSurfaceView.setZOrderOnTop(false);
+        mViewfinderView = new ViewfinderView(mContext, null);
+        mViewfinderView.setLayoutParams(layoutParams);
+        this.addView(mViewfinderView);
+    }
+
+
+    public void openFlash(boolean isOpen) {
+        OpenCamera        camera      = cameraManager.getCamera();
+        Camera.Parameters mParameters = null;
+        Camera            theCamera   = null;
+        if (camera != null) {
+            theCamera = camera.getCamera();
+            mParameters = theCamera.getParameters();
+        }
+        if (isOpen) {
+            try {
+                assert mParameters != null;
+                mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                theCamera.setParameters(mParameters);
+            } catch (Exception ignored) {
+            }
+        } else {
+            try {
+                assert mParameters != null;
+                mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                theCamera.setParameters(mParameters);
+            } catch (Exception ignored) {
+            }
+
+        }
+    }
+
     private synchronized void initCamera(SurfaceHolder holder) {
         try {
             cameraManager.openDriver(holder);
@@ -71,9 +118,10 @@ public class ScannerView extends FrameLayout {
             e.printStackTrace();
         }
         if (handler == null) {
-            handler = new ResultHandler(this,cameraManager, mViewfinderView);
+            handler = new ResultHandler(this, cameraManager, mViewfinderView);
         }
     }
+
 
     public void setOnParsingCompleteListener(ParsingCompleteListener parsingCompleteListener) {
         this.parsingCompleteListener = parsingCompleteListener;
@@ -87,15 +135,22 @@ public class ScannerView extends FrameLayout {
     }
 
     public void handleMessage(String text, String handingTime) {
-        if (parsingCompleteListener!=null) {
-            parsingCompleteListener.onComplete(text,handingTime,ZXingUtils.regexText(text));
+        if (parsingCompleteListener != null) {
+            parsingCompleteListener.onComplete(text, handingTime, ZXingUtils.regexText(text));
         }
     }
 
     public void release() {
-        if (handler!= null) {
-           handler.quitSynchronously();
+        if (handler != null) {
+            handler.quitSynchronously();
         }
+        OpenCamera camera = cameraManager.getCamera();
+        if (camera != null) {
+            Camera theCamera = camera.getCamera();
+            assert theCamera != null;
+            theCamera.release();
+        }
+
     }
 
 

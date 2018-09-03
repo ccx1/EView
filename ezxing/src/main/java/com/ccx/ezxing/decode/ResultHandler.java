@@ -8,6 +8,9 @@ import com.ccx.ezxing.conts.Conts;
 import com.ccx.ezxing.view.ScannerView;
 import com.ccx.ezxing.view.ViewfinderResultPointCallback;
 import com.ccx.ezxing.view.ViewfinderView;
+import com.google.zxing.DecodeHintType;
+
+import java.util.Map;
 
 public class ResultHandler extends Handler {
 
@@ -39,6 +42,11 @@ public class ResultHandler extends Handler {
         cameraManager.startPreview();
         restartPreviewAndDecode();
     }
+
+    public Map<DecodeHintType, Object> getHints(){
+       return decodeThread.getHints();
+    }
+
 
     @Override
     public void handleMessage(Message message) {

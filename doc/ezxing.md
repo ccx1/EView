@@ -12,19 +12,13 @@
 
 写了一个ParsingCompleteListener 监听器
 
-内部有两个方法，一个是会有识别type的，还有一个是直接把识别结果传回来的
+一个是会有识别type的，还有一个是直接把识别结果传回来的
 
 
 
 
         mScannerView = view.findViewById(R.id.findview);
         mScannerView.setOnParsingCompleteListener(new ParsingCompleteListener() {
-
-            @Override
-            public void onComplete(String text, String handingTime) {
-                System.out.println(text);
-                System.out.println(handingTime);
-            }
 
             @Override
             public void onComplete(String text, String handingTime, DecodeType type) {
@@ -83,6 +77,15 @@ max是我传的二维码图，你们想传文件也好，什么都可以，Bitma
 
         public static DecodeResult encodeImage(Bitmap bitmap)
 
+然后。DecodeResult目前只有两个个字段。一个是结果，一个是处理时间（秀优越用的）.
 
-然后。DecodeResult目前只有两个字段。一个是结果，一个是处理时间（秀优越用的）。好了，就这样把
+新增打开闪光灯
+
+        public void openFlash(boolean isOpen)
+
+使用方法是
+
+        mScannerView.openFlash(isOpen);
+
+
 

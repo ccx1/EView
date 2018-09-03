@@ -16,6 +16,8 @@
 
 package com.ccx.ezxing.decode;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -23,28 +25,33 @@ import android.support.annotation.Nullable;
 
 import com.ccx.ezxing.camera.CameraManager;
 import com.ccx.ezxing.conts.Conts;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.util.Map;
+import java.util.Vector;
 
 final class DecodeHandler extends Handler {
 
     private static final String TAG = DecodeHandler.class.getSimpleName();
 
-    private final MultiFormatReader multiFormatReader;
-    private final CameraManager     cameraManager;
-    private final ResultHandler     captureActivityHandler;
+    private final MultiFormatReader           multiFormatReader;
+    private final CameraManager               cameraManager;
+    private final ResultHandler               captureActivityHandler;
+    private final Map<DecodeHintType, Object> hints;
     private boolean running = true;
 
     DecodeHandler(CameraManager cameraManager, ResultHandler captureActivityHandler, Map<DecodeHintType, Object> hints) {
         this.cameraManager = cameraManager;
         this.captureActivityHandler = captureActivityHandler;
+        this.hints = hints;
         multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(hints);
     }
@@ -83,7 +90,9 @@ final class DecodeHandler extends Handler {
             data = rotatedData;
         }
         Result rawResult = getResult(data, width, height);
-        if (rawResult == null) {
+        // 检测条形码需要使用，如果默认里面不包含条形码，则不走此方法
+        if (rawResult == null &&
+                ((Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS)).containsAll(DecodeFormatManager.PRODUCT_FORMATS)) {
             rawResult = getResult(rotateByteDegree90(data, width, height), width, height);
         }
         long end = System.currentTimeMillis();
@@ -111,9 +120,9 @@ final class DecodeHandler extends Handler {
             }
             multiFormatReader.reset();
         }
+
         return rawResult;
     }
-
 
     private byte[] rotateByteDegree90(byte[] data, int width, int height) {
         byte[] neoData = new byte[width * height * 3 / 2];
