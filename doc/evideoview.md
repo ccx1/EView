@@ -1,6 +1,8 @@
 ### EVideoView
 
 
+<img src="/gif/video.gif" width="320px" />
+
 封装了ijkplayer
 
         mEVideoView = new EVideoView(mContext);

@@ -4,6 +4,9 @@
 
 一个下拉刷新和加载更多，避免了加载第三方的时候项目过于臃肿
 
+<img src="/gif/recycleview.gif" width="320px" />
+
+
 只用依赖上erecycleview即可进行使用
 
 详细布局
