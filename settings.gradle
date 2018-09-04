@@ -1,1 +1,1 @@
-include ':erecycleview', ':sample', ':evideoview', ':ezxing',  'ewebview'
+include ':erecycleview', ':sample', ':evideoview', ':ezxing', ':esafetextview',  'ewebview'

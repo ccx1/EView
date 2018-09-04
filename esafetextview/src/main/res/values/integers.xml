@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="keycode_hide_keyboard">-10001</integer>
+    <integer name="keycode_sure_keyboard">-10002</integer>
+    <integer name="keycode_blank_keyboard">-10003</integer>
+    <integer name="keycode_backspace_keyboard">-10004</integer>
+
+</resources>

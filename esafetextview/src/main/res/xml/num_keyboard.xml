@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:horizontalGap="2dp"
+    android:keyHeight="62dp"
+    android:keyWidth="25%"
+    android:verticalGap="2dp">
+
+    <Row>
+        <Key
+            android:codes="49"
+            android:keyEdgeFlags="left"
+            android:keyLabel="1"
+            android:keyOutputText="1" />
+        <Key
+            android:codes="50"
+            android:keyLabel="2"
+            android:keyOutputText="2" />
+        <Key
+            android:codes="51"
+            android:keyLabel="3"
+            android:keyOutputText="3" />
+
+        <Key
+            android:codes="@integer/keycode_backspace_keyboard"
+            android:keyLabel="退格" />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="52"
+            android:keyEdgeFlags="left"
+            android:keyLabel="4"
+            android:keyOutputText="4" />
+        <Key
+            android:codes="53"
+            android:keyLabel="5"
+            android:keyOutputText="5" />
+        <Key
+            android:codes="54"
+            android:keyLabel="6"
+            android:keyOutputText="6" />
+
+        <Key
+            android:codes="-10001"
+            android:keyLabel="空格"
+            android:keyOutputText=" " />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="left"
+            android:keyLabel="7"
+            android:keyOutputText="7" />
+        <Key
+            android:codes="56"
+            android:keyLabel="8"
+            android:keyOutputText="8" />
+        <Key
+            android:codes="57"
+            android:keyLabel="9"
+            android:keyOutputText="9" />
+
+        <Key
+            android:codes="@integer/keycode_hide_keyboard"
+            android:keyLabel="隐藏" />
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="-51"
+            android:keyEdgeFlags="left"
+            android:keyLabel="."
+            android:keyOutputText="." />
+        <Key
+            android:codes="48"
+            android:keyLabel="0"
+            android:keyOutputText="0" />
+
+        <Key
+            android:codes="@integer/keycode_sure_keyboard"
+            android:keyLabel="确认"
+            android:keyWidth="50%" />
+    </Row>
+
+</Keyboard>

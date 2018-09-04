@@ -10,5 +10,8 @@ public class SafeEditTextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safe_text);
 
+
     }
+
+
 }
