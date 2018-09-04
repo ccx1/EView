@@ -30,7 +30,19 @@
 
     <a href="/doc/evideoview.md" >evideoview页面文档导航</a>
 
-4. android google zxing 封装，高效
+4.  textview的再度封装，
+
+    1). 重写keyboard类.
+
+    2). 重写keyboardview类
+
+    3). 修改键盘绘制流程。
+
+    4). 重新编写系统级键盘
+
+    <a href="/doc/esafetextview.md" >esafetextview页面文档导航</a>
+
+5. android google zxing 封装，高效
 
     1). 除去了很多没有必要的功能
 
