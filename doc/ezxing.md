@@ -60,7 +60,7 @@
 解释无力，还是看demo把，很简单
 
 
-    <img src="/gif/encoding.gif" width="320px" />
+<img src="/gif/encoding.gif" width="320px" />
 
 
 生成二维码的调用方法是ZXingUtils.encodeAsBitmap(当前的context, 需要生成的文字)。会返回一个bitmap。如果有rxjava，这步可以搞成异步
