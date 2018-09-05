@@ -3,23 +3,30 @@ package com.ccx.esafetextview;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.inputmethodservice.KeyboardView;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 
-public class SafeTextView extends TextView implements  View.OnKeyListener, KeyboardView.OnKeyboardActionListener {
 
-    private final Context      mContext;
-    private       long         mCurrentTime;
+public class SafeTextView extends EditText implements View.OnKeyListener, KeyboardView.OnKeyboardActionListener {
+
+    private final Context          mContext;
+    private       long             mCurrentTime;
     private       SafeKeyboardView mKeyboardView;
-    private       boolean      hasKeyBoard;
+    private       boolean          hasKeyBoard;
 
     public SafeTextView(Context context) {
         this(context, null);
@@ -46,6 +53,8 @@ public class SafeTextView extends TextView implements  View.OnKeyListener, Keybo
                 MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.AT_MOST),
                 MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
         mKeyboardView.setOnKeyboardActionListener(this);
+//        setCursorVisible(true);
+
     }
 
     @Override
@@ -62,6 +71,7 @@ public class SafeTextView extends TextView implements  View.OnKeyListener, Keybo
                 if (clickTime < 100) {
                     if (!hasKeyBoard) {
                         showKeyBoard();
+                        hideSystemSoftKeyboard(this);
                     }
                 } else if (clickTime > 2000) {
                     System.out.println("长按事件，则需要显示复制窗口");
@@ -71,11 +81,37 @@ public class SafeTextView extends TextView implements  View.OnKeyListener, Keybo
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 隐藏系统键盘
+     *
+     * @param editText
+     */
+    public static void hideSystemSoftKeyboard(EditText editText) {
+        int sdkInt = Build.VERSION.SDK_INT;
+        if (sdkInt >= 11) {
+            try {
+                Class<EditText> cls = EditText.class;
+                Method          setShowSoftInputOnFocus;
+                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                setShowSoftInputOnFocus.setAccessible(true);
+                setShowSoftInputOnFocus.invoke(editText, false);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            editText.setInputType(InputType.TYPE_NULL);
+        }
+    }
+
     // 显示键盘
     private void showKeyBoard() {
         ViewGroup rootView = (ViewGroup) this.getRootView();
         rootView.addView(mKeyboardView);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext), ScreenUtils.getScreenHeight(mContext) -  mKeyboardView.getMeasuredHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext), ScreenUtils.getScreenHeight(mContext) - mKeyboardView.getMeasuredHeight());
         animator.start();
         hasKeyBoard = true;
     }
@@ -94,7 +130,7 @@ public class SafeTextView extends TextView implements  View.OnKeyListener, Keybo
 
     private void hideKeyBoard() {
         final ViewGroup rootView = (ViewGroup) this.getRootView();
-        ObjectAnimator  animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext) -  mKeyboardView.getHeight(), ScreenUtils.getRealHeight(mContext));
+        ObjectAnimator  animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext) - mKeyboardView.getHeight(), ScreenUtils.getRealHeight(mContext));
         animator.start();
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -118,12 +154,22 @@ public class SafeTextView extends TextView implements  View.OnKeyListener, Keybo
         System.out.println("onRelease");
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         System.out.println("onKey" + primaryCode);
-        if (primaryCode ==  getInteger(R.integer.keycode_backspace_keyboard)) {
+        if (primaryCode == getInteger(R.integer.keycode_backspace_keyboard)) {
             CharSequence text = this.getText();
-            this.setText(text.subSequence(0, text.length() - 1));
+            if (!TextUtils.isEmpty(text)) {
+//                System.out.println();
+                int selectionEnd = getSelectionEnd();
+                if (selectionEnd != 0) {
+                    CharSequence s  = text.subSequence(0, selectionEnd - 1);
+                    CharSequence s1 = text.subSequence(selectionEnd, text.length());
+                    this.setText(s.toString() + s1.toString());
+                    this.setSelection(selectionEnd - 1);
+                }
+            }
         } else if (primaryCode == getInteger(R.integer.keycode_sure_keyboard)) {
             hideKeyBoard();
         } else if (primaryCode == getInteger(R.integer.keycode_hide_keyboard)) {

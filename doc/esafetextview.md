@@ -2,7 +2,7 @@
 
 1. 制作了一个简单的数字键盘，实现方法，等待完善。
 
-<img src="/gif/safekeyboard.gif" width="320px" />
+<img src="/gif/keyboard.gif" width="320px" />
 
 2. 重写了绘制方法，进行键盘绘制，根据宽度大小进行测量绘制。本来想做个炫酷的效果，没做出来，算了
 
