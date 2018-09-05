@@ -8,6 +8,7 @@ import android.content.Context;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.ContentFrameLayout;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,8 +16,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
 import java.lang.reflect.Method;
 
@@ -27,6 +29,12 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
     private       long             mCurrentTime;
     private       SafeKeyboardView mKeyboardView;
     private       boolean          hasKeyBoard;
+    private       int              mResId;
+    private       View             mParentView;
+    private       int              mScreenHeight;
+    private       ScrollView       mScrollView;
+    private       int              mScrollHeight;
+    private       int              mVirtualBarHeight;
 
     public SafeTextView(Context context) {
         this(context, null);
@@ -53,7 +61,11 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
                 MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.AT_MOST),
                 MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
         mKeyboardView.setOnKeyboardActionListener(this);
-//        setCursorVisible(true);
+        mScreenHeight = ScreenUtils.getScreenHeight(mContext);
+        mVirtualBarHeight = ScreenUtils.getVirtualBarHeight(mContext);
+        this.measure(
+                MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.AT_MOST),
+                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
 
     }
 
@@ -81,10 +93,11 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
         return super.onTouchEvent(event);
     }
 
+
     /**
      * 隐藏系统键盘
      *
-     * @param editText
+     * @param editText 本身
      */
     public static void hideSystemSoftKeyboard(EditText editText) {
         int sdkInt = Build.VERSION.SDK_INT;
@@ -111,9 +124,44 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
     private void showKeyBoard() {
         ViewGroup rootView = (ViewGroup) this.getRootView();
         rootView.addView(mKeyboardView);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext), ScreenUtils.getScreenHeight(mContext) - mKeyboardView.getMeasuredHeight());
-        animator.start();
+        if (mParentView == null) {
+            getParentView();
+        }
+
+        // 说明有scrollview
+        if (mScrollView != null) {
+            ViewGroup.LayoutParams layoutParams = mScrollView.getLayoutParams();
+            // 记录高度
+            mScrollHeight = layoutParams.height;
+            layoutParams.height = mScreenHeight - mKeyboardView.getMeasuredHeight() - this.getMeasuredHeight() - mVirtualBarHeight;
+            mScrollView.setLayoutParams(layoutParams);
+        }
+        mParentView.setPadding(0, -mKeyboardView.getMeasuredHeight(), 0, mKeyboardView.getMeasuredHeight());
+
+        getAnimator(mKeyboardView, "translationY", mScreenHeight, mScreenHeight - mKeyboardView.getMeasuredHeight());
         hasKeyBoard = true;
+    }
+
+    private Animator getAnimator(SafeKeyboardView keyboardView, String target, int value1, int value2) {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(keyboardView, target, value1, value2);
+        animator.start();
+        return animator;
+    }
+
+    private void getParentView() {
+        mParentView = this;
+        while (true) {
+            ViewParent parent = mParentView.getParent();
+            if (parent instanceof ContentFrameLayout) {
+                mParentView = (View) parent;
+                break;
+            } else {
+                mParentView = (View) parent;
+                if (mParentView instanceof ScrollView) {
+                    mScrollView = (ScrollView) parent;
+                }
+            }
+        }
     }
 
     @Override
@@ -130,8 +178,18 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
 
     private void hideKeyBoard() {
         final ViewGroup rootView = (ViewGroup) this.getRootView();
-        ObjectAnimator  animator = ObjectAnimator.ofFloat(mKeyboardView, "translationY", ScreenUtils.getScreenHeight(mContext) - mKeyboardView.getHeight(), ScreenUtils.getRealHeight(mContext));
-        animator.start();
+        // 寻找真正的view
+        if (mParentView == null) {
+            getParentView();
+        }
+        // 说明有scrollview
+        if (mScrollView != null) {
+            ViewGroup.LayoutParams layoutParams = mScrollView.getLayoutParams();
+            layoutParams.height = mScrollHeight;
+            mScrollView.setLayoutParams(layoutParams);
+        }
+        mParentView.setPadding(0, 0, 0, 0);
+        Animator animator = getAnimator(mKeyboardView, "translationY", mScreenHeight - mKeyboardView.getHeight(), mScreenHeight);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -161,13 +219,12 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
         if (primaryCode == getInteger(R.integer.keycode_backspace_keyboard)) {
             CharSequence text = this.getText();
             if (!TextUtils.isEmpty(text)) {
-//                System.out.println();
                 int selectionEnd = getSelectionEnd();
-                if (selectionEnd != 0) {
-                    CharSequence s  = text.subSequence(0, selectionEnd - 1);
-                    CharSequence s1 = text.subSequence(selectionEnd, text.length());
-                    this.setText(s.toString() + s1.toString());
-                    this.setSelection(selectionEnd - 1);
+                int selectionStart = getSelectionStart();
+                if (selectionStart != selectionEnd) {
+                    this.getEditableText().delete(selectionStart, selectionEnd);
+                } else if (selectionEnd != 0) {
+                    this.getEditableText().delete(selectionEnd - 1, selectionEnd);
                 }
             }
         } else if (primaryCode == getInteger(R.integer.keycode_sure_keyboard)) {
@@ -183,8 +240,8 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
 
     @Override
     public void onText(CharSequence text) {
-        System.out.println("onText");
-        this.append(text);
+        int selectionEnd = this.getSelectionEnd();
+        this.getEditableText().insert(selectionEnd, text);
     }
 
     @Override

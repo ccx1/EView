@@ -40,6 +40,8 @@
 
     4). 重新编写系统级键盘
 
+    5). 新增scrollview监听，对其进行特殊判断
+
     <a href="/doc/esafetextview.md" >esafetextview页面文档导航</a>
 
 5. android google zxing 封装，高效
