@@ -120,6 +120,7 @@ public class ScannerView extends FrameLayout {
         if (handler == null) {
             handler = new ResultHandler(this, cameraManager, mViewfinderView);
         }
+
     }
 
 

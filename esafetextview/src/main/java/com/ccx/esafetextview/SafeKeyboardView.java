@@ -103,10 +103,10 @@ class SafeKeyboardView extends KeyboardView {
                 count += 2;
             }
 
-            // 求中心
 
             if (label != null) {
                 mPaint.setShadowLayer(5, 0, 0, 0);
+                // 求中心
                 int centerWidth  = key.width / 2;
                 int centerHeight = key.height / 2 + sumHeight + 10;
                 // 画字

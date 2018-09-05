@@ -105,7 +105,7 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
             try {
                 Class<EditText> cls = EditText.class;
                 Method          setShowSoftInputOnFocus;
-                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+                setShowSoftInputOnFocus = cls.getDeclaredMethod("setShowSoftInputOnFocus", boolean.class);
                 setShowSoftInputOnFocus.setAccessible(true);
                 setShowSoftInputOnFocus.invoke(editText, false);
             } catch (SecurityException e) {
