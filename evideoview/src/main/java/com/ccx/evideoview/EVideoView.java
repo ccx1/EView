@@ -128,7 +128,12 @@ public class EVideoView extends FrameLayout {
     }
 
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        if (mMediaPlayer != null) {
+            return mMediaPlayer.isPlaying();
+        }else {
+            return false;
+        }
+
     }
 
 
