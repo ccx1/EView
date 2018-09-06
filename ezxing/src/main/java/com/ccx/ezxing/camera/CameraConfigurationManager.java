@@ -29,7 +29,6 @@ import android.view.WindowManager;
 import com.ccx.ezxing.conts.KeyDecode;
 import com.ccx.ezxing.camera.open.CameraFacing;
 import com.ccx.ezxing.camera.open.OpenCamera;
-import com.ccx.ezxing.utils.ScreenUtils;
 
 /**
  * A class which deals with reading, parsing, and setting the camera parameters which are used to

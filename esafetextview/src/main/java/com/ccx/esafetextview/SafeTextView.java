@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
@@ -83,7 +84,7 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
                 if (clickTime < 100) {
                     if (!hasKeyBoard) {
                         showKeyBoard();
-                        hideSystemSoftKeyboard(this);
+                        hideSystemSoftKeyboard(SafeTextView.this);
                     }
                 } else if (clickTime > 2000) {
                     System.out.println("长按事件，则需要显示复制窗口");
@@ -99,13 +100,14 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
      *
      * @param editText 本身
      */
-    public static void hideSystemSoftKeyboard(EditText editText) {
+    public void hideSystemSoftKeyboard(EditText editText) {
+
         int sdkInt = Build.VERSION.SDK_INT;
         if (sdkInt >= 11) {
             try {
                 Class<EditText> cls = EditText.class;
                 Method          setShowSoftInputOnFocus;
-                setShowSoftInputOnFocus = cls.getDeclaredMethod("setShowSoftInputOnFocus", boolean.class);
+                setShowSoftInputOnFocus = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
                 setShowSoftInputOnFocus.setAccessible(true);
                 setShowSoftInputOnFocus.invoke(editText, false);
             } catch (SecurityException e) {
@@ -135,11 +137,13 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
             mScrollHeight = layoutParams.height;
             layoutParams.height = mScreenHeight - mKeyboardView.getMeasuredHeight() - this.getMeasuredHeight() - mVirtualBarHeight;
             mScrollView.setLayoutParams(layoutParams);
-        }
-        mParentView.setPadding(0, -mKeyboardView.getMeasuredHeight(), 0, mKeyboardView.getMeasuredHeight());
+        }else {
+            mParentView.setPadding(0, -mKeyboardView.getMeasuredHeight(), 0, mKeyboardView.getMeasuredHeight());
 
+        }
         getAnimator(mKeyboardView, "translationY", mScreenHeight, mScreenHeight - mKeyboardView.getMeasuredHeight());
         hasKeyBoard = true;
+
     }
 
     private Animator getAnimator(SafeKeyboardView keyboardView, String target, int value1, int value2) {
@@ -187,8 +191,9 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
             ViewGroup.LayoutParams layoutParams = mScrollView.getLayoutParams();
             layoutParams.height = mScrollHeight;
             mScrollView.setLayoutParams(layoutParams);
+        }else {
+            mParentView.setPadding(0, 0, 0, 0);
         }
-        mParentView.setPadding(0, 0, 0, 0);
         Animator animator = getAnimator(mKeyboardView, "translationY", mScreenHeight - mKeyboardView.getHeight(), mScreenHeight);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
