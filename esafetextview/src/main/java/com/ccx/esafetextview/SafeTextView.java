@@ -4,19 +4,25 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.inputmethodservice.KeyboardView;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ContentFrameLayout;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -67,7 +73,22 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
         this.measure(
                 MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.AT_MOST),
                 MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+    }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     @Override
@@ -125,11 +146,13 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
     // 显示键盘
     private void showKeyBoard() {
         ViewGroup rootView = (ViewGroup) this.getRootView();
-        rootView.addView(mKeyboardView);
+        if (mKeyboardView.getParent() == null) {
+            rootView.addView(mKeyboardView);
+        }
         if (mParentView == null) {
             getParentView();
         }
-
+//        ((ViewGroup) mParentView.getParent()).addView(mKeyboardView);
         // 说明有scrollview
         if (mScrollView != null) {
             ViewGroup.LayoutParams layoutParams = mScrollView.getLayoutParams();
@@ -137,10 +160,9 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
             mScrollHeight = layoutParams.height;
             layoutParams.height = mScreenHeight - mKeyboardView.getMeasuredHeight() - this.getMeasuredHeight() - mVirtualBarHeight;
             mScrollView.setLayoutParams(layoutParams);
+        } else {
+            mParentView.setPadding(0, -mKeyboardView.getMeasuredHeight(), 0, mKeyboardView.getMeasuredHeight());
         }
-
-        mParentView.setPadding(0, -mKeyboardView.getMeasuredHeight(), 0, mKeyboardView.getMeasuredHeight());
-
 
         getAnimator(mKeyboardView, "translationY", mScreenHeight, mScreenHeight - mKeyboardView.getMeasuredHeight());
         hasKeyBoard = true;
@@ -159,8 +181,10 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
             ViewGroup.LayoutParams layoutParams = mScrollView.getLayoutParams();
             layoutParams.height = mScrollHeight;
             mScrollView.setLayoutParams(layoutParams);
+        } else {
+            mParentView.setPadding(0, 0, 0, 0);
         }
-        mParentView.setPadding(0, 0, 0, 0);
+
 
         Animator animator = getAnimator(mKeyboardView, "translationY", mScreenHeight - mKeyboardView.getHeight(), mScreenHeight);
         animator.addListener(new AnimatorListenerAdapter() {
@@ -185,13 +209,13 @@ public class SafeTextView extends EditText implements View.OnKeyListener, Keyboa
         mParentView = this;
         while (true) {
             ViewParent parent = mParentView.getParent();
-            if (parent instanceof ContentFrameLayout) {
+            mParentView = (View) parent;
+            if (mParentView.getId() == android.R.id.content) {
+                mParentView = ((ViewGroup) mParentView).getChildAt(0);
                 break;
-            } else {
-                mParentView = (View) parent;
-                if (mParentView instanceof ScrollView) {
-                    mScrollView = (ScrollView) parent;
-                }
+            }
+            if (mParentView instanceof ScrollView) {
+                mScrollView = (ScrollView) parent;
             }
         }
     }

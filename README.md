@@ -42,6 +42,8 @@
 
     5). 新增scrollview监听，对其进行特殊判断
 
+    6). 对dialog还是没有很好的处理方案。介意无用
+
     <a href="/doc/esafetextview.md" >esafetextview页面文档导航</a>
 
 5. android google zxing 封装，高效
