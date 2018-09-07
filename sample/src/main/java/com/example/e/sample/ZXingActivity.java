@@ -39,10 +39,6 @@ public class ZXingActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if (ContextCompat.checkSelfPermission(ZXingActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(ZXingActivity.this,
-                    new String[]{Manifest.permission.CAMERA,}, 1);
-        }
         super.onResume();
     }
 }

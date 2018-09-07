@@ -227,7 +227,7 @@ public final class CameraManager {
             }
 
             int width  = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
-            int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
+            int height = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
 
             int leftOffset = (screenResolution.x - width) / 2;
             int topOffset  = (screenResolution.y - height) / 2;
@@ -342,7 +342,7 @@ public final class CameraManager {
         // Go ahead and assume it's YUV rather than die.
 //        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
 //                rect.width(), rect.height(), false);
-        return new PlanarYUVLuminanceSource(data, width, height, 0,0,width,height, false);
+        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
     }
 
     public OpenCamera getCamera() {

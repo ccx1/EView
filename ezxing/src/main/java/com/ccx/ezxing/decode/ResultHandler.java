@@ -6,7 +6,6 @@ import android.os.Message;
 import com.ccx.ezxing.camera.CameraManager;
 import com.ccx.ezxing.conts.Conts;
 import com.ccx.ezxing.view.ScannerView;
-import com.ccx.ezxing.view.ViewfinderResultPointCallback;
 import com.ccx.ezxing.view.ViewfinderView;
 import com.google.zxing.DecodeHintType;
 

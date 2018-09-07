@@ -1,6 +1,11 @@
 package com.example.e.sample;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +27,11 @@ public class ZXingSwitchActivity extends AppCompatActivity implements View.OnCli
         ;
         switch (v.getId()) {
             case R.id.btn1:
+                if (ContextCompat.checkSelfPermission(ZXingSwitchActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ZXingSwitchActivity.this,
+                            new String[]{Manifest.permission.CAMERA,}, 1);
+                    return;
+                }
                 intent.putExtra("fragmentType", "camera");
                 break;
             case R.id.btn2:
@@ -32,5 +42,20 @@ public class ZXingSwitchActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(ZXingSwitchActivity.this, ZXingActivity.class);
+            intent.putExtra("fragmentType", "camera");
+            startActivity(intent);
+        }
     }
 }
