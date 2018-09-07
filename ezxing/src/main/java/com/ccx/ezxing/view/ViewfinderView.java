@@ -38,6 +38,7 @@ public final class ViewfinderView extends View {
     private int mBottom = -1;
     private int mTop    = -1;
     private Shader mShader;
+    private Rect   mRect;
 
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
@@ -49,6 +50,7 @@ public final class ViewfinderView extends View {
         resultColor = resources.getColor(R.color.result_view);
 //        laserColor = resources.getColor(R.color.viewfinder_laser);
         possibleResultPoints = new ArrayList<>(5);
+
     }
 
     public void setCameraManager(CameraManager cameraManager) {
@@ -62,13 +64,25 @@ public final class ViewfinderView extends View {
         if (cameraManager == null) {
             return; // not ready yet, early draw before done configuring
         }
-        Rect frame        = cameraManager.getFramingRect();
-        Rect previewFrame = cameraManager.getFramingRectInPreview();
-        if (frame == null || previewFrame == null) {
-            return;
-        }
+//        Rect frame        = cameraManager.getFramingRect();
+//        System.out.println(frame);
+        //(202, 568 - 877, 1243)
+//        mRect = new Rect();
+//        getFocusedRect(mRect);
+
+
         int width  = canvas.getWidth();
         int height = canvas.getHeight();
+
+        // 中心点
+        int XCenter = width / 2;
+        int YCenter = height / 2;
+
+//        如果要一个方形，那么需要取到两个的方形点
+        int tailor = XCenter / 4 * 3;
+        // 存放框的高度宽度信息
+        Rect frame = new Rect(XCenter - tailor, YCenter - tailor, XCenter + tailor, YCenter + tailor);
+//        Rect frame = new Rect();
 
         // Draw the exterior (i.e. outside the framing rect) darkened
         paint.setColor(resultBitmap != null ? resultColor : maskColor);
