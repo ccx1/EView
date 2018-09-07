@@ -103,10 +103,10 @@ final class DecodeHandler extends Handler {
         long   start     = System.currentTimeMillis();
         Result rawResult = getResult(data, width, height);
         // 检测条形码需要使用，如果默认里面不包含条形码，则不走此方法
-        if (rawResult == null &&
+       /* if (rawResult == null &&
                 ((Vector) hints.get(DecodeHintType.POSSIBLE_FORMATS)).containsAll(DecodeFormatManager.PRODUCT_FORMATS)) {
             rawResult = getResult(rotateByteDegree90(data, width, height), width, height);
-        }
+        }*/
         long end = System.currentTimeMillis();
         if (rawResult != null) {
             DecodeResult decodeResult = new DecodeResult();
