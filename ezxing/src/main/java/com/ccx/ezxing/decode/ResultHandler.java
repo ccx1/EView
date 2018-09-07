@@ -32,7 +32,7 @@ public class ResultHandler extends Handler {
     public ResultHandler(ScannerView scannerView, CameraManager cameraManager, ViewfinderView findView) {
         // 解析线程
         decodeThread = new DecodeThread(this, null, null,
-                new ViewfinderResultPointCallback(findView), cameraManager);
+                null, cameraManager);
         decodeThread.start();
         state = State.SUCCESS;
         this.findView = findView;
@@ -43,8 +43,8 @@ public class ResultHandler extends Handler {
         restartPreviewAndDecode();
     }
 
-    public Map<DecodeHintType, Object> getHints(){
-       return decodeThread.getHints();
+    public Map<DecodeHintType, Object> getHints() {
+        return decodeThread.getHints();
     }
 
 
@@ -57,7 +57,7 @@ public class ResultHandler extends Handler {
             case Conts.Result.SUECCESS:
                 state = State.SUCCESS;
                 DecodeResult decodeResult = (DecodeResult) message.obj;
-                mScannerView.handleMessage(decodeResult.rawResult,decodeResult.handingTime);
+                mScannerView.handleMessage(decodeResult.rawResult, decodeResult.handingTime);
                 break;
             case Conts.Result.FAIL:
                 // We're decoding as fast as possible, so when one decode fails, start another.
@@ -73,7 +73,7 @@ public class ResultHandler extends Handler {
     public void quitSynchronously() {
         state = State.DONE;
         cameraManager.stopPreview();
-        Message quit = Message.obtain(decodeThread.getHandler(),1);
+        Message quit = Message.obtain(decodeThread.getHandler(), 1);
         quit.sendToTarget();
         try {
             // Wait at most half a second; should be enough time, and onPause() will timeout quickly

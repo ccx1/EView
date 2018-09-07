@@ -1,33 +1,15 @@
-/*
- * Copyright (C) 2014 ZXing authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.ccx.ezxing.camera;
+
 
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
-
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -44,13 +26,13 @@ public final class CameraConfigurationUtils {
 
     private static final Pattern SEMICOLON = Pattern.compile(";");
 
-    private static final int    MIN_PREVIEW_PIXELS        = 480 * 320; // normal screen
-    private static final float  MAX_EXPOSURE_COMPENSATION = 1.5f;
-    private static final float  MIN_EXPOSURE_COMPENSATION = 0.0f;
-    private static final double MAX_ASPECT_DISTORTION     = 0.15;
-    private static final int    MIN_FPS                   = 10;
-    private static final int    MAX_FPS                   = 20;
-    private static final int    AREA_PER_1000             = 400;
+    private static final int MIN_PREVIEW_PIXELS = 480 * 320; // normal screen
+    private static final float MAX_EXPOSURE_COMPENSATION = 1.5f;
+    private static final float MIN_EXPOSURE_COMPENSATION = 0.0f;
+    private static final double MAX_ASPECT_DISTORTION = 0.15;
+    private static final int MIN_FPS = 10;
+    private static final int MAX_FPS = 20;
+    private static final int AREA_PER_1000 = 400;
 
     private CameraConfigurationUtils() {
     }
@@ -92,7 +74,7 @@ public final class CameraConfigurationUtils {
 
     public static void setTorch(Camera.Parameters parameters, boolean on) {
         List<String> supportedFlashModes = parameters.getSupportedFlashModes();
-        String       flashMode;
+        String flashMode;
         if (on) {
             flashMode = findSettableValue("flash mode",
                     supportedFlashModes,
@@ -114,13 +96,13 @@ public final class CameraConfigurationUtils {
     }
 
     public static void setBestExposure(Camera.Parameters parameters, boolean lightOn) {
-        int   minExposure = parameters.getMinExposureCompensation();
-        int   maxExposure = parameters.getMaxExposureCompensation();
-        float step        = parameters.getExposureCompensationStep();
+        int minExposure = parameters.getMinExposureCompensation();
+        int maxExposure = parameters.getMaxExposureCompensation();
+        float step = parameters.getExposureCompensationStep();
         if ((minExposure != 0 || maxExposure != 0) && step > 0.0f) {
             // Set low when light is on
             float targetCompensation = lightOn ? MIN_EXPOSURE_COMPENSATION : MAX_EXPOSURE_COMPENSATION;
-            int   compensationSteps  = Math.round(targetCompensation / step);
+            int compensationSteps = Math.round(targetCompensation / step);
             float actualCompensation = step * compensationSteps;
             // Clamp value:
             compensationSteps = Math.max(Math.min(compensationSteps, maxExposure), minExposure);
@@ -195,7 +177,6 @@ public final class CameraConfigurationUtils {
                 new Camera.Area(new Rect(-areaPer1000, -areaPer1000, areaPer1000, areaPer1000), 1));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
     public static void setVideoStabilization(Camera.Parameters parameters) {
         if (parameters.isVideoStabilizationSupported()) {
             if (parameters.getVideoStabilization()) {
@@ -247,9 +228,9 @@ public final class CameraConfigurationUtils {
             Log.w(TAG, "Invalid zoom ratios!");
             return null;
         }
-        double target100    = 100.0 * targetZoomRatio;
+        double target100 = 100.0 * targetZoomRatio;
         double smallestDiff = Double.POSITIVE_INFINITY;
-        int    closestIndex = 0;
+        int closestIndex = 0;
         for (int i = 0; i < ratios.size(); i++) {
             double diff = Math.abs(ratios.get(i) - target100);
             if (diff < smallestDiff) {
@@ -297,10 +278,10 @@ public final class CameraConfigurationUtils {
         double screenAspectRatio = screenResolution.x / (double) screenResolution.y;
 
         // Find a suitable size, with max resolution
-        int         maxResolution     = 0;
+        int maxResolution = 0;
         Camera.Size maxResPreviewSize = null;
         for (Camera.Size size : rawSupportedSizes) {
-            int realWidth  = size.width;
+            int realWidth = size.width;
             int realHeight = size.height;
             int resolution = realWidth * realHeight;
             if (resolution < MIN_PREVIEW_PIXELS) {
@@ -308,10 +289,10 @@ public final class CameraConfigurationUtils {
             }
 
             boolean isCandidatePortrait = realWidth < realHeight;
-            int     maybeFlippedWidth   = isCandidatePortrait ? realHeight : realWidth;
-            int     maybeFlippedHeight  = isCandidatePortrait ? realWidth : realHeight;
-            double  aspectRatio         = maybeFlippedWidth / (double) maybeFlippedHeight;
-            double  distortion          = Math.abs(aspectRatio - screenAspectRatio);
+            int maybeFlippedWidth = isCandidatePortrait ? realHeight : realWidth;
+            int maybeFlippedHeight = isCandidatePortrait ? realWidth : realHeight;
+            double aspectRatio = maybeFlippedWidth / (double) maybeFlippedHeight;
+            double distortion = Math.abs(aspectRatio - screenAspectRatio);
             if (distortion > MAX_ASPECT_DISTORTION) {
                 continue;
             }
@@ -347,7 +328,6 @@ public final class CameraConfigurationUtils {
         Log.i(TAG, "No suitable preview sizes, using default: " + defaultSize);
         return defaultSize;
     }
-
 
     private static String findSettableValue(String name,
                                             Collection<String> supportedValues,
@@ -431,7 +411,5 @@ public final class CameraConfigurationUtils {
 
         return result.toString();
     }
-
-
 
 }

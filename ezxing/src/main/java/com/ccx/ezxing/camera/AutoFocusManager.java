@@ -24,6 +24,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 
+import com.ccx.ezxing.conts.KeyDecode;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.RejectedExecutionException;
@@ -33,7 +35,6 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
 
   private static final String TAG = AutoFocusManager.class.getSimpleName();
 
-  // 聚焦时间
   private static final long AUTO_FOCUS_INTERVAL_MS = 1500L;
   private static final Collection<String> FOCUS_MODES_CALLING_AF;
   static {
@@ -53,7 +54,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     String currentFocusMode = camera.getParameters().getFocusMode();
     useAutoFocus =
-        sharedPrefs.getBoolean("KEY_AUTO_FOCUS", true) &&
+        sharedPrefs.getBoolean(KeyDecode.KEY_AUTO_FOCUS, true) &&
         FOCUS_MODES_CALLING_AF.contains(currentFocusMode);
     Log.i(TAG, "Current focus mode '" + currentFocusMode + "'; use auto focus? " + useAutoFocus);
     start();
@@ -61,7 +62,6 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
 
   @Override
   public synchronized void onAutoFocus(boolean success, Camera theCamera) {
-//    System.out.println("自动对焦");
     focusing = false;
     autoFocusAgainLater();
   }

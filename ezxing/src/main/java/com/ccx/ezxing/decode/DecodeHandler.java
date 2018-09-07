@@ -78,17 +78,18 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        long start = System.currentTimeMillis();
-
-        if (width < height) {
-            // portrait
-            byte[] rotatedData = new byte[data.length];
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++)
-                    rotatedData[y * width + width - x - 1] = data[y + x * height];
-            }
-            data = rotatedData;
+        //竖屏
+        byte[] rotatedData = new byte[data.length];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++)
+                rotatedData[x * height + height - y - 1] = data[x + y * width];
         }
+        int tmp = width;
+        width = height;
+        height = tmp;
+        data = rotatedData;
+
+        long   start     = System.currentTimeMillis();
         Result rawResult = getResult(data, width, height);
         // 检测条形码需要使用，如果默认里面不包含条形码，则不走此方法
         if (rawResult == null &&
