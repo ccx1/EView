@@ -37,25 +37,26 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
 
   private static final long AUTO_FOCUS_INTERVAL_MS = 1500L;
   private static final Collection<String> FOCUS_MODES_CALLING_AF;
+
   static {
-    FOCUS_MODES_CALLING_AF = new ArrayList<>(2);
+    FOCUS_MODES_CALLING_AF = new ArrayList<String>(2);
     FOCUS_MODES_CALLING_AF.add(Camera.Parameters.FOCUS_MODE_AUTO);
     FOCUS_MODES_CALLING_AF.add(Camera.Parameters.FOCUS_MODE_MACRO);
   }
 
-  private boolean stopped;
-  private boolean focusing;
   private final boolean useAutoFocus;
   private final Camera camera;
-  private AsyncTask<?,?,?> outstandingTask;
+  private boolean stopped;
+  private boolean focusing;
+  private AsyncTask<?, ?, ?> outstandingTask;
 
   AutoFocusManager(Context context, Camera camera) {
     this.camera = camera;
     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     String currentFocusMode = camera.getParameters().getFocusMode();
     useAutoFocus =
-        sharedPrefs.getBoolean(KeyDecode.KEY_AUTO_FOCUS, true) &&
-        FOCUS_MODES_CALLING_AF.contains(currentFocusMode);
+            sharedPrefs.getBoolean(KeyDecode.KEY_AUTO_FOCUS, true) &&
+                    FOCUS_MODES_CALLING_AF.contains(currentFocusMode);
     Log.i(TAG, "Current focus mode '" + currentFocusMode + "'; use auto focus? " + useAutoFocus);
     start();
   }
@@ -118,7 +119,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
     }
   }
 
-  private final class AutoFocusTask extends AsyncTask<Object,Object,Object> {
+  private final class AutoFocusTask extends AsyncTask<Object, Object, Object> {
     @Override
     protected Object doInBackground(Object... voids) {
       try {
@@ -130,5 +131,4 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
       return null;
     }
   }
-
 }
