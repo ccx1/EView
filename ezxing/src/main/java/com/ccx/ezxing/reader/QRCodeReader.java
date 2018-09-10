@@ -93,7 +93,7 @@ public class QRCodeReader implements Reader {
                             }
                             parameters.setZoom(zoom);
                             camera.setParameters(parameters);
-                            return null;
+//                            return null;
                         }
                     }
                 }
@@ -101,7 +101,7 @@ public class QRCodeReader implements Reader {
             //3、对符号码矩阵按照编码规范进行解码，得到实际信息（decoder代码实现的功能）
             decoderResult = decoder.decode(detectorResult.getBits(), hints);
             points = detectorResult.getPoints();
-            System.out.println("检测到二维码");
+//            System.out.println("检测到二维码");
         }
 
         // If the code was mirrored: swap the bottom-left and the top-right points.
