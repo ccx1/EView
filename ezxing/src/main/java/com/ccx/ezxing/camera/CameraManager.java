@@ -46,6 +46,7 @@ public final class CameraManager {
     private static final int MIN_FRAME_HEIGHT = 240;
     private static final int MAX_FRAME_WIDTH  = 1200; // = 5/8 * 1920
     private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
+    private static CameraManager mCameraManager;
 
     private final Context                    context;
     private final CameraConfigurationManager configManager;
@@ -69,6 +70,7 @@ public final class CameraManager {
         this.configManager = new CameraConfigurationManager(context);
         previewCallback = new PreviewCallback(configManager);
     }
+
 
     /**
      * Opens the camera driver and initializes the hardware parameters.

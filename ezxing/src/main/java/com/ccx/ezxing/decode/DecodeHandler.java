@@ -16,8 +16,6 @@
 
 package com.ccx.ezxing.decode;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -25,18 +23,15 @@ import android.support.annotation.Nullable;
 
 import com.ccx.ezxing.camera.CameraManager;
 import com.ccx.ezxing.conts.Conts;
-import com.google.zxing.BarcodeFormat;
+import com.ccx.ezxing.reader.MultiFormatReader;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 
 import java.util.Map;
-import java.util.Vector;
 
 final class DecodeHandler extends Handler {
 
@@ -52,7 +47,7 @@ final class DecodeHandler extends Handler {
         this.cameraManager = cameraManager;
         this.captureActivityHandler = captureActivityHandler;
         this.hints = hints;
-        multiFormatReader = new MultiFormatReader();
+        multiFormatReader = new MultiFormatReader(cameraManager);
         multiFormatReader.setHints(hints);
     }
 

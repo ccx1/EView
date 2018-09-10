@@ -77,7 +77,6 @@ public class ScannerView extends FrameLayout {
         mSurfaceView = new SurfaceView(mContext);
         mSurfaceView.setLayoutParams(layoutParams);
         this.addView(mSurfaceView);
-
         mSurfaceView.setZOrderOnTop(false);
         mViewfinderView = new ViewfinderView(mContext, null);
         mViewfinderView.setLayoutParams(layoutParams);
