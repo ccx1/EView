@@ -93,7 +93,7 @@ public class QRCodeReader implements Reader {
                             }
                             parameters.setZoom(zoom);
                             camera.setParameters(parameters);
-//                            return null;
+                            return null;
                         }
                     }
                 }
