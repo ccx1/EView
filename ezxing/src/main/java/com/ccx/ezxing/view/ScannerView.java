@@ -1,6 +1,8 @@
 package com.ccx.ezxing.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.ccx.ezxing.R;
 import com.ccx.ezxing.camera.CameraManager;
 import com.ccx.ezxing.camera.open.OpenCamera;
 import com.ccx.ezxing.decode.AmbientLightManager;
@@ -39,20 +42,29 @@ public class ScannerView extends FrameLayout {
     private boolean DataMatrix = true;
     private boolean Aztec;
     private boolean Pdf417;
+    public static final int CAMERA_FACING_BACK = 0;
+
+    /**
+     * The facing of the camera is the same as that of the screen.
+     */
+    public static final int CAMERA_FACING_FRONT = 1;
+    private boolean mOpenFront;
+
 
     public ScannerView(Context context) {
-        super(context);
-        initView(context);
+        this(context,null);
     }
 
 
     public ScannerView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
+        this(context, attrs,0);
     }
 
     public ScannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        @SuppressLint("Recycle") TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ScannerView);
+        mOpenFront = typedArray.getBoolean(R.styleable.ScannerView_openFront, false);
+        typedArray.recycle();
         initView(context);
     }
 
@@ -60,6 +72,7 @@ public class ScannerView extends FrameLayout {
         this.mContext = context;
         initBasicView();
         cameraManager = new CameraManager(mContext.getApplicationContext());
+        cameraManager.setManualCameraId(mOpenFront ? CAMERA_FACING_FRONT : CAMERA_FACING_BACK);
         AmbientLightManager ambientLightManager = new AmbientLightManager(mContext);
         mViewfinderView.setCameraManager(cameraManager);
         ambientLightManager.start(cameraManager);
