@@ -95,4 +95,9 @@ max是我传的二维码图，你们想传文件也好，什么都可以，Bitma
         mScannerView.openFlash(isOpen);
 
 
+新增自定义属性 ，是否打开前置摄像头。没写代码切换
+
+        <attr name="openFront" format="boolean"/>
+
+
 
