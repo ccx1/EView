@@ -1,5 +1,6 @@
 package com.example.e.sample.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import com.ccx.ezxing.DecodeType;
 import com.ccx.ezxing.listener.ParsingCompleteListener;
 import com.ccx.ezxing.view.ScannerView;
 import com.example.e.sample.R;
+import com.example.e.sample.ZXingActivity;
+import com.example.e.sample.ZXingSwitchActivity;
 
 
 public class ECameraZxingFragment extends Fragment {

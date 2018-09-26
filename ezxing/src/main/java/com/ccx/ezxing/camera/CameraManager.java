@@ -158,6 +158,15 @@ public final class CameraManager {
         }
     }
 
+    public boolean isPreviewing() {
+        return previewing;
+    }
+
+
+    public void setPreviewing(boolean previewing) {
+        this.previewing = previewing;
+    }
+
     /**
      * Tells the camera to stop drawing preview frames.
      */

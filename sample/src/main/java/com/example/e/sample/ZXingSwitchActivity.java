@@ -24,7 +24,6 @@ public class ZXingSwitchActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(ZXingSwitchActivity.this, ZXingActivity.class);
-        ;
         switch (v.getId()) {
             case R.id.btn1:
                 if (ContextCompat.checkSelfPermission(ZXingSwitchActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

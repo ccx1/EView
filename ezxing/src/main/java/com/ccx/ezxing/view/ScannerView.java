@@ -52,12 +52,12 @@ public class ScannerView extends FrameLayout {
 
 
     public ScannerView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
 
     public ScannerView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public ScannerView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -71,6 +71,10 @@ public class ScannerView extends FrameLayout {
     private void initView(Context context) {
         this.mContext = context;
         initBasicView();
+        initCamera();
+    }
+
+    private void initCamera() {
         cameraManager = new CameraManager(mContext.getApplicationContext());
         cameraManager.setManualCameraId(mOpenFront ? CAMERA_FACING_FRONT : CAMERA_FACING_BACK);
         AmbientLightManager ambientLightManager = new AmbientLightManager(mContext);
@@ -156,12 +160,17 @@ public class ScannerView extends FrameLayout {
     public void release() {
         if (handler != null) {
             handler.quitSynchronously();
+            handler = null;
         }
         OpenCamera camera = cameraManager.getCamera();
         if (camera != null) {
+            if (cameraManager.isPreviewing()) {
+                cameraManager.stopPreview();
+            }
             Camera theCamera = camera.getCamera();
             assert theCamera != null;
             theCamera.release();
+            cameraManager.setPreviewing(false);
         }
 
     }
@@ -173,7 +182,7 @@ public class ScannerView extends FrameLayout {
         public void surfaceCreated(SurfaceHolder holder) {
             if (!hasSurface) {
                 hasSurface = true;
-                initCamera(holder);
+                initCamera();
             }
         }
 
@@ -185,6 +194,7 @@ public class ScannerView extends FrameLayout {
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
             hasSurface = false;
+            release();
         }
     }
 
