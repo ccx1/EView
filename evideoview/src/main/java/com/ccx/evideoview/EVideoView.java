@@ -1,6 +1,7 @@
 package com.ccx.evideoview;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AttrRes;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -30,6 +32,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 
 public class EVideoView extends FrameLayout {
+
 
 
     /**
@@ -47,6 +50,8 @@ public class EVideoView extends FrameLayout {
     private Context             mContext;
     private boolean isInitMediaPlay = true;
     private Handler mHandler        = new Handler(Looper.getMainLooper());
+    private Uri     mURI;
+    private boolean isURi;
 
     public EVideoView(@NonNull Context context) {
         super(context);
@@ -67,6 +72,7 @@ public class EVideoView extends FrameLayout {
         mContext = context;
         //获取焦点
         setFocusable(true);
+
     }
 
     /**
@@ -109,7 +115,7 @@ public class EVideoView extends FrameLayout {
                 , LayoutParams.MATCH_PARENT, Gravity.CENTER);
         surfaceView.setLayoutParams(layoutParams);
         // 如果有两个surface，则会冲突，需要设置永远置顶
-        // surfaceView.setZOrderOnTop(true);
+        surfaceView.setZOrderOnTop(true);
         this.addView(surfaceView);
     }
 
@@ -130,7 +136,8 @@ public class EVideoView extends FrameLayout {
     public boolean isPlaying() {
         if (mMediaPlayer != null) {
             return mMediaPlayer.isPlaying();
-        }else {
+
+        } else {
             return false;
         }
 
@@ -151,6 +158,14 @@ public class EVideoView extends FrameLayout {
                 mHandler.postDelayed(this, 15);
             }
         }, 15);
+    }
+
+    public void setVideoPath(Uri parse) {
+        isURi = true;
+        //如果是第一次播放视频，那就创建一个新的surfaceView
+        this.mURI = parse;
+        createSurfaceView();
+
     }
 
 
@@ -189,7 +204,11 @@ public class EVideoView extends FrameLayout {
         String dataSource = mMediaPlayer.getDataSource();
         try {
             if (dataSource == null) {
-                mMediaPlayer.setDataSource(mPath);
+                if (isURi) {
+                    mMediaPlayer.setDataSource(mContext, mURI, new HashMap<String, String>());
+                } else {
+                    mMediaPlayer.setDataSource(mPath);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -212,26 +231,45 @@ public class EVideoView extends FrameLayout {
 //            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
             // 开启硬解码
 //            IjkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-
+            IjkMediaPlayer.loadLibrariesOnce(null);
+            IjkMediaPlayer.native_profileBegin("libijkplayer.so");
             mMediaPlayer = new IjkMediaPlayer();
+            mMediaPlayer.setScreenOnWhilePlaying(true);
             try {
+
                 Method method = Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer")
                         .getDeclaredMethod("setOption", int.class, String.class, long.class);
                 // 硬编码
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec",1);
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec-auto-rotate",1);
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"mediacodec-handle-resolution-change",1);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
 
                 // 设置是否开启环路过滤: 0开启，画面质量高，解码开销大，48关闭，画面质量差点，解码开销小
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_CODEC,"skip_loop_filter",48);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 48);
                 // 是否缓冲
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",1);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
                 // 设置缓冲区,单位是kb
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",8 * 1024);
-                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",1);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 8 * 8 * 2 * 1024);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
 //                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",maxCacheSize);
 
-//                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"packet-buffering",isBufferCache?1:0);
+//                method.invoke(mMediaPlayer,IjkMediaPlayer.OPT_CATEGORY_FORMAT, "timeout", 20000);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 8 * 8 * 2 * 1024);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);  // 无限读
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100L);
+//                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 10240L);
+                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1L);
+//  关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
+//                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
+//                method.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1L);
+
+                // 另一个反射
+//
+                Method method1 = Class.forName("tv.danmaku.ijk.media.player.IjkMediaPlayer")
+                        .getDeclaredMethod("setOption", int.class, String.class, String.class);
+                method1.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+                method1.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
+                method1.invoke(mMediaPlayer, IjkMediaPlayer.OPT_CATEGORY_FORMAT, "allowed_media_types", "video");
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
@@ -282,6 +320,8 @@ public class EVideoView extends FrameLayout {
             mMediaPlayer.setDisplay(null);
             mMediaPlayer.release();
             mMediaPlayer = null;
+            surfaceView = null;
+            this.removeAllViews();
         }
     }
 
